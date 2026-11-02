@@ -1,0 +1,139 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--stage);
+}
+
+body {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 520px at 50% -12%, rgba(255, 194, 61, 0.16), transparent 62%),
+    radial-gradient(700px 480px at 105% 105%, rgba(255, 93, 115, 0.1), transparent 60%),
+    radial-gradient(700px 480px at -5% 100%, rgba(92, 200, 255, 0.08), transparent 60%),
+    var(--stage);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.25;
+  text-wrap: balance;
+  letter-spacing: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bulb);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.muted {
+  color: var(--ink-dim);
+}
+
+.player-name {
+  color: var(--player, var(--bulb));
+}
+
+.text-link {
+  color: var(--bulb);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.section-title {
+  font-size: var(--step-2);
+  color: var(--ink);
+}
+
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Signed scores (+200 / −300) must read left-to-right inside RTL text. */
+.feedback__points,
+.review__pts,
+.decision__value,
+.standing__score,
+.score-chip__score,
+.mini-board__score,
+.leaderboard__score,
+.wager__amount {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
