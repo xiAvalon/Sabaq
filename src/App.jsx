@@ -26,7 +26,7 @@ export default function App() {
   return (
     <SettingsProvider>
       <GameProvider>
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Router basename={import.meta.env.BASE_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
           <div className="app">
             <Routes>
