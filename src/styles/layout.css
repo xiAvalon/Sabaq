@@ -1,0 +1,137 @@
+/* ---------- brand ---------- */
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  flex: none;
+  display: block;
+}
+
+.wordmark__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.wordmark__ar {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.45rem;
+  line-height: 1.05;
+}
+
+.wordmark__sub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 0.04em;
+}
+
+.wordmark--lg .wordmark__ar {
+  font-size: 2.6rem;
+}
+
+.wordmark--lg .wordmark__sub {
+  font-size: 1rem;
+}
+
+.wordmark--sm .wordmark__ar {
+  font-size: 1.2rem;
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 14px;
+  margin-bottom: 8px;
+}
+
+.topbar__brand {
+  text-decoration: none;
+  border-radius: var(--r-md);
+}
+
+.topbar__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.net-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 92, 122, 0.14);
+  color: var(--bad);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: rgba(245, 246, 250, 0.04);
+  min-width: 0;
+  transition: border-color var(--dur);
+}
+
+.profile-chip:hover {
+  border-color: var(--cyan);
+}
+
+.profile-chip__name {
+  font-weight: 600;
+  font-size: var(--step--1);
+  max-width: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- page header ---------- */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 8px 0 22px;
+}
+
+.page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.page-title {
+  font-size: var(--step-3);
+}
+
+.page-subtitle {
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+.screen {
+  animation: rise 320ms var(--ease);
+}
+
+.narrow {
+  max-width: 760px;
+  margin-inline: auto;
+}

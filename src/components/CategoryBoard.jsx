@@ -1,5 +1,6 @@
 import { getCategory } from '../data/categories.js';
 import { DIFFICULTIES } from '../engine/config.js';
+import { Icon } from './icons.jsx';
 
 export default function CategoryBoard({ game, onPick }) {
   const { seg, players } = game;
@@ -21,9 +22,7 @@ export default function CategoryBoard({ game, onPick }) {
           return (
             <div className="board__col" key={catId} style={{ '--cat': cat.color }}>
               <div className="board__head">
-                <span className="board__glyph" aria-hidden="true">
-                  {cat.glyph}
-                </span>
+                <Icon name={cat.icon} size={24} />
                 <span className="board__name">{cat.name}</span>
               </div>
               {[1, 2, 3].map((d) => {

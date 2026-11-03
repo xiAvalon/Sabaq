@@ -1,34 +1,44 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { PageHeader, Segmented, Stepper } from '../components/ui.jsx';
+import CategoryPicker from '../components/CategoryPicker.jsx';
+import { Icon } from '../components/icons.jsx';
+import { Availability } from '../components/ModeCard.jsx';
+import { Avatar, PageHeader, Segmented, Stepper } from '../components/ui.jsx';
 import { useGame } from '../context/GameContext.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
-import { CATEGORIES, CATEGORY_IDS } from '../data/categories.js';
-import { CLOCK_CHOICES, DIFFICULTY_CHOICES, POWERUP_COUNT_CHOICES, QUESTION_TIME_CHOICES } from '../engine/config.js';
-import { getMode, MODES } from '../engine/modes.js';
+import { CATEGORY_IDS } from '../data/categories.js';
+import { CLOCK_CHOICES, DIFFICULTY_CHOICES, PLAYER_COLORS, POWERUP_COUNT_CHOICES, QUESTION_TIME_CHOICES } from '../engine/config.js';
+import { getMode } from '../engine/modes.js';
 import { defaultName, draftErrors, draftToConfig, draftToMemory, fitNames, makeDraft, randomizeDraft, ROUNDS_RANGE } from '../engine/setup.js';
-import { countByCategory } from '../services/questionRepository.js';
 import { loadLastSetup, saveLastSetup } from '../services/storage.js';
 import { sound } from '../services/sound.js';
 
 const timeLabel = (t) => (t === 'auto' ? 'تلقائي' : `${t} ث`);
+const STEPS = [
+  { id: 'players', label: 'اللاعبون' },
+  { id: 'categories', label: 'الفئات' },
+  { id: 'rules', label: 'القواعد' },
+];
 
-function SetupForm({ modeId }) {
+function SetupWizard({ modeId }) {
   const mode = getMode(modeId);
   const { bank, startGame } = useGame();
-  const { settings } = useSettings();
+  const { settings, profile } = useSettings();
   const navigate = useNavigate();
-  const [draft, setDraft] = useState(() => makeDraft(modeId, { settings, last: loadLastSetup(), categoryIds: CATEGORY_IDS }));
-  const counts = useMemo(() => (bank ? countByCategory(bank) : {}), [bank]);
+  const [step, setStep] = useState(0);
+  const [draft, setDraft] = useState(() => {
+    const d = makeDraft(modeId, { settings, last: loadLastSetup(), categoryIds: CATEGORY_IDS });
+    // Player 1 defaults to the profile name, so stats and achievements follow the owner.
+    if (!d.names[0] || d.names[0] === defaultName(d.playerMode, 0)) d.names[0] = profile.name;
+    return d;
+  });
   const errors = draftErrors(draft);
-  // Remember choices as they change, so switching modes keeps names and categories.
+  const categoryErrors = errors.filter((e) => e.includes('فئ'));
+  const nameErrors = errors.filter((e) => !e.includes('فئ'));
   useEffect(() => saveLastSetup(draftToMemory(draft, loadLastSetup())), [draft]);
+
   const patch = (p) => setDraft((d) => ({ ...d, ...p }));
-  const { min: catMin, max: catMax } = mode.categoryRange;
-
-  const setCount = (n) =>
-    setDraft((d) => ({ ...d, playerCount: n, names: fitNames(d.names, Math.max(n, d.names.length), d.playerMode) }));
-
+  const setCount = (n) => setDraft((d) => ({ ...d, playerCount: n, names: fitNames(d.names, Math.max(n, d.names.length), d.playerMode) }));
   const setPlayerMode = (playerMode) =>
     setDraft((d) => ({
       ...d,
@@ -36,13 +46,7 @@ function SetupForm({ modeId }) {
       names: d.names.map((name, i) => (name === defaultName(d.playerMode, i) ? defaultName(playerMode, i) : name)),
     }));
 
-  const toggleCategory = (id) =>
-    setDraft((d) => {
-      if (d.categories.includes(id)) return { ...d, categories: d.categories.filter((c) => c !== id) };
-      if (catMax && d.categories.length >= catMax) return d;
-      return { ...d, categories: [...d.categories, id] };
-    });
-
+  const stepBlocked = (i) => (i === 0 ? nameErrors.length > 0 : i === 1 ? categoryErrors.length > 0 : errors.length > 0);
   const start = () => {
     if (errors.length || !bank) return;
     sound.unlock();
@@ -50,132 +54,101 @@ function SetupForm({ modeId }) {
     saveLastSetup(draftToMemory(draft, loadLastSetup()));
     if (startGame(modeId, draftToConfig(draft))) navigate('/play');
   };
-
+  const next = () => (step < STEPS.length - 1 ? setStep(step + 1) : start());
   const has = (opt) => mode.options.includes(opt);
   const rounds = ROUNDS_RANGE[modeId];
-  const unit = draft.playerMode === 'teams' ? 'فرق' : 'لاعبين';
+  const unit = draft.playerMode === 'teams' ? 'الفرق' : 'اللاعبين';
+  const stepErrors = step === 0 ? nameErrors : step === 1 ? categoryErrors : errors;
 
   return (
-    <div className="setup">
-      <PageHeader title="إعداد اللعبة">
-        <div className="mode-tabs" role="tablist" aria-label="نمط اللعب">
-          {MODES.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              role="tab"
-              aria-selected={m.id === modeId}
-              className={`mode-tab${m.id === modeId ? ' is-active' : ''}`}
-              onClick={() => navigate(`/setup/${m.id}`, { replace: true })}
-            >
-              <span aria-hidden="true">{m.glyph}</span> {m.name}
-            </button>
-          ))}
-        </div>
-        <p className="setup__tagline">{mode.tagline}</p>
+    <div className="wizard screen">
+      <PageHeader title={mode.name} subtitle={mode.tagline} back="/offline">
+        <Availability mode={mode} />
       </PageHeader>
 
-      <section className="panel">
-        <div className="panel__head">
-          <h2>المشاركون</h2>
-          <Segmented
-            id="player-mode"
-            label="لاعبون أم فرق"
-            value={draft.playerMode}
-            onChange={setPlayerMode}
-            options={[
-              { value: 'players', label: 'لاعبون' },
-              { value: 'teams', label: 'فرق' },
-            ]}
-          />
-        </div>
-        {mode.players.min !== mode.players.max && (
-          <div className="field">
-            <span className="field__label">عدد ال{unit}</span>
-            <Stepper id="player-count" value={draft.playerCount} min={mode.players.min} max={mode.players.max} onChange={setCount} label={`عدد ال${unit}`} />
-          </div>
-        )}
-        <div className="names">
-          {Array.from({ length: draft.playerCount }, (_, i) => (
-            <label key={i} className="name-field" htmlFor={`player-${i}`}>
-              <span className="name-field__index">{i + 1}</span>
-              <input
-                id={`player-${i}`}
-                type="text"
-                maxLength={18}
-                value={draft.names[i] ?? ''}
-                placeholder={defaultName(draft.playerMode, i)}
-                onChange={(e) => {
-                  const names = [...draft.names];
-                  names[i] = e.target.value;
-                  patch({ names });
-                }}
-              />
-            </label>
-          ))}
-        </div>
-      </section>
-
-      <section className="panel">
-        <div className="panel__head">
-          <h2>الفئات</h2>
-          <span className="panel__hint">
-            {catMax ? `اختر من ${catMin} إلى ${catMax}` : 'اختر فئة أو أكثر'} · المختار {draft.categories.length}
-          </span>
-        </div>
-        <div className="cat-actions">
-          {!catMax && (
-            <button type="button" className="chip" onClick={() => patch({ categories: [...CATEGORY_IDS] })}>
-              الكل
+      <ol className="steps" aria-label="خطوات الإعداد">
+        {STEPS.map((s, i) => (
+          <li key={s.id} className={`steps__item${i === step ? ' is-current' : ''}${i < step ? ' is-done' : ''}`}>
+            <button type="button" onClick={() => setStep(i)} aria-current={i === step ? 'step' : undefined}>
+              <span className="steps__num">{i < step ? <Icon name="check" size={14} /> : i + 1}</span>
+              <span className="steps__label">{s.label}</span>
             </button>
-          )}
-          <button type="button" className="chip" onClick={() => patch({ categories: [] })}>
-            مسح
-          </button>
-          <button type="button" className="chip" onClick={() => patch({ categories: randomizeDraft(draft, CATEGORY_IDS).categories })}>
-            اختيار عشوائي
-          </button>
-        </div>
-        <div className="cat-grid">
-          {CATEGORIES.map((c) => {
-            const on = draft.categories.includes(c.id);
-            const blocked = !on && catMax && draft.categories.length >= catMax;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                className={`cat-option${on ? ' is-on' : ''}`}
-                style={{ '--cat': c.color }}
-                aria-pressed={on}
-                disabled={blocked}
-                onClick={() => toggleCategory(c.id)}
-              >
-                <span className="cat-option__glyph" aria-hidden="true">
-                  {c.glyph}
-                </span>
-                <span className="cat-option__name">{c.name}</span>
-                <span className="cat-option__count">{counts[c.id] ?? 0}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
+          </li>
+        ))}
+      </ol>
 
-      <section className="panel">
-        <div className="panel__head">
-          <h2>قواعد الجولة</h2>
-        </div>
-        <div className="fields">
+      {step === 0 && (
+        <section className="card" aria-labelledby="players-title">
+          <div className="card__head">
+            <h2 id="players-title">من سيلعب؟</h2>
+            <Segmented
+              id="player-mode"
+              label="لاعبون أم فرق"
+              value={draft.playerMode}
+              onChange={setPlayerMode}
+              options={[
+                { value: 'players', label: 'لاعبون' },
+                { value: 'teams', label: 'فرق' },
+              ]}
+            />
+          </div>
+          {mode.players.min !== mode.players.max && (
+            <div className="field">
+              <span className="field__label">عدد {unit}</span>
+              <Stepper id="player-count" value={draft.playerCount} min={mode.players.min} max={mode.players.max} onChange={setCount} label={`عدد ${unit}`} />
+            </div>
+          )}
+          <div className="players">
+            {Array.from({ length: draft.playerCount }, (_, i) => (
+              <label key={i} className="player-field" htmlFor={`player-${i}`}>
+                <Avatar name={draft.names[i] || defaultName(draft.playerMode, i)} color={PLAYER_COLORS[i % PLAYER_COLORS.length]} size={30} />
+                <input
+                  id={`player-${i}`}
+                  type="text"
+                  maxLength={18}
+                  value={draft.names[i] ?? ''}
+                  placeholder={defaultName(draft.playerMode, i)}
+                  aria-label={`اسم ${draft.playerMode === 'teams' ? 'الفريق' : 'اللاعب'} ${i + 1}`}
+                  onChange={(e) => {
+                    const names = [...draft.names];
+                    names[i] = e.target.value;
+                    patch({ names });
+                  }}
+                />
+              </label>
+            ))}
+          </div>
+          {draft.playerCount > 1 && <p className="card__hint">ستمرّرون الجهاز بينكم، وتظهر شاشة قصيرة تحدد صاحب الدور قبل كل سؤال.</p>}
+        </section>
+      )}
+
+      {step === 1 && (
+        <section className="card" aria-labelledby="cats-title">
+          <div className="card__head">
+            <h2 id="cats-title">اختر الفئات</h2>
+          </div>
+          <CategoryPicker value={draft.categories} onChange={(categories) => patch({ categories })} min={mode.categoryRange.min} max={mode.categoryRange.max} bank={bank} />
+        </section>
+      )}
+
+      {step === 2 && (
+        <section className="card" aria-labelledby="rules-title">
+          <div className="card__head">
+            <h2 id="rules-title">قواعد اللعبة</h2>
+            <button type="button" className="chip" onClick={() => setDraft(randomizeDraft(draft, CATEGORY_IDS))}>
+              <Icon name="shuffle" size={16} /> إعدادات عشوائية
+            </button>
+          </div>
+          {has('clockSeconds') && (
+            <div className="field">
+              <span className="field__label">مدة الجولة لكل لاعب</span>
+              <Segmented id="clock" label="مدة الجولة" value={draft.clockSeconds} onChange={(v) => patch({ clockSeconds: v })} options={CLOCK_CHOICES.map((s) => ({ value: s, label: `${s} ث` }))} />
+            </div>
+          )}
           {has('difficulty') && (
             <div className="field">
               <span className="field__label">الصعوبة</span>
               <Segmented id="difficulty" label="الصعوبة" value={draft.difficulty} onChange={(v) => patch({ difficulty: v })} options={DIFFICULTY_CHOICES.map((d) => ({ value: d.id, label: d.label }))} />
-            </div>
-          )}
-          {has('clockSeconds') && (
-            <div className="field">
-              <span className="field__label">مدة العداد لكل لاعب</span>
-              <Segmented id="clock" label="مدة العداد" value={draft.clockSeconds} onChange={(v) => patch({ clockSeconds: v })} options={CLOCK_CHOICES.map((s) => ({ value: s, label: `${s} ث` }))} />
             </div>
           )}
           {has('questionTime') && (
@@ -191,26 +164,33 @@ function SetupForm({ modeId }) {
             </div>
           )}
           <div className="field">
-            <span className="field__label">وسائل المساعدة (لكل وسيلة)</span>
-            <Segmented id="powerups" label="عدد وسائل المساعدة" value={draft.powerups} onChange={(v) => patch({ powerups: v })} options={POWERUP_COUNT_CHOICES.map((n) => ({ value: n, label: n === 0 ? 'بدون' : `${n}` }))} />
+            <span className="field__label">وسائل المساعدة لكل لاعب</span>
+            <Segmented id="powerups" label="وسائل المساعدة" value={draft.powerups} onChange={(v) => patch({ powerups: v })} options={POWERUP_COUNT_CHOICES.map((n) => ({ value: n, label: n === 0 ? 'بدون' : `${n} من كل نوع` }))} />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <div className="setup__footer">
-        {errors.length > 0 && (
-          <ul className="setup__errors" role="alert">
-            {errors.map((e) => (
-              <li key={e}>{e}</li>
-            ))}
-          </ul>
-        )}
-        <div className="setup__buttons">
-          <button type="button" className="btn btn--ghost" onClick={() => setDraft(randomizeDraft(draft, CATEGORY_IDS))}>
-            إعدادات عشوائية
-          </button>
-          <button type="button" className="btn btn--primary btn--lg" onClick={start} disabled={errors.length > 0 || !bank}>
-            ابدأ اللعب
+      {stepErrors.length > 0 && (
+        <ul className="errors" role="alert">
+          {stepErrors.map((e) => (
+            <li key={e}>{e}</li>
+          ))}
+        </ul>
+      )}
+
+      <div className="wizard__footer">
+        <p className="wizard__summary">
+          {draft.playerCount} {draft.playerCount === 1 ? 'لاعب' : unit} · {draft.categories.length} فئة
+          {has('clockSeconds') ? ` · ${draft.clockSeconds} ثانية` : ''}
+        </p>
+        <div className="wizard__buttons">
+          {step > 0 && (
+            <button type="button" className="btn btn--ghost" onClick={() => setStep(step - 1)}>
+              السابق
+            </button>
+          )}
+          <button type="button" className={`btn ${step === STEPS.length - 1 ? 'btn--gold btn--lg' : 'btn--primary'}`} onClick={next} disabled={stepBlocked(step) || !bank}>
+            {step === STEPS.length - 1 ? 'ابدأ اللعب' : 'التالي'}
           </button>
         </div>
       </div>
@@ -220,6 +200,6 @@ function SetupForm({ modeId }) {
 
 export default function SetupScreen() {
   const { modeId } = useParams();
-  if (!getMode(modeId)) return <Navigate to="/" replace />;
-  return <SetupForm key={modeId} modeId={modeId} />;
+  if (!getMode(modeId)) return <Navigate to="/offline" replace />;
+  return <SetupWizard key={modeId} modeId={modeId} />;
 }

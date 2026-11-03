@@ -3,6 +3,44 @@ import { TIMING } from '../engine/config.js';
 import { formatAnswer } from '../engine/questionTypes.js';
 import { useKey } from '../hooks/useKey.js';
 
+function RoundSummary({ game }) {
+  const { current, players, seg, history } = game;
+  const idx = current.playerIdx;
+  // Answers this player gave in the current clock run (history since the run began).
+  const run = [];
+  for (let i = history.length - 1; i >= 0; i--) {
+    const h = history[i];
+    if (h.segment !== 'clock' || h.playerIdx !== idx) break;
+    run.unshift(h);
+  }
+  let best = 0;
+  let cur = 0;
+  for (const h of run) {
+    cur = h.correct ? cur + 1 : 0;
+    best = Math.max(best, cur);
+  }
+  const points = run.reduce((sum, h) => sum + h.points, 0);
+  return (
+    <>
+      <p className="feedback__text">انتهت ثواني {players[idx].name}.</p>
+      <dl className="round-summary">
+        <div>
+          <dt>صحيحة</dt>
+          <dd>{seg.correctInRun}</dd>
+        </div>
+        <div>
+          <dt>النقاط</dt>
+          <dd className="num-ltr">+{points}</dd>
+        </div>
+        <div>
+          <dt>أطول سلسلة</dt>
+          <dd>{best}</dd>
+        </div>
+      </dl>
+    </>
+  );
+}
+
 export default function Feedback({ game, showExplanations, onNext }) {
   const { current, players, seg } = game;
   const { result, question } = current;
@@ -51,7 +89,7 @@ export default function Feedback({ game, showExplanations, onNext }) {
           </span>
         )}
       </div>
-      {result.clockEnded && <p className="feedback__text">أجاب {players[current.playerIdx].name} عن {seg.correctInRun} أسئلة بشكل صحيح في هذه الجولة.</p>}
+      {result.clockEnded && <RoundSummary game={game} />}
       {chips.length > 0 && (
         <div className="feedback__chips">
           {chips.map((c) => (

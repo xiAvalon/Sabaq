@@ -39,10 +39,10 @@ export const POWERUPS = {
 };
 export const POWERUP_IDS = Object.keys(POWERUPS);
 
-export const PLAYER_COLORS = ['#ffc23d', '#4cc9f0', '#ff7a8a', '#9b8cff', '#5ee0a0', '#ff9f43'];
+export const PLAYER_COLORS = ['#FFC857', '#32C5D2', '#FF7A93', '#9D94FF', '#5BE3A6', '#FF9E57'];
 
 export const QUESTION_TIME_CHOICES = ['auto', 10, 15, 20, 30];
-export const CLOCK_CHOICES = [30, 60, 90, 120];
+export const CLOCK_CHOICES = [30, 45, 60];
 export const POWERUP_COUNT_CHOICES = [0, 1, 2];
 export const BOARD_MAX_CATEGORIES = 6;
 export const BOARD_MIN_CATEGORIES = 3;

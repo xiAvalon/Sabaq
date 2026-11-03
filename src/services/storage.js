@@ -1,7 +1,9 @@
 // localStorage wrapper: every read/write is guarded so the game works when storage is blocked.
+import { evaluateAchievements, foldGameIntoStats } from '../engine/achievements.js';
+
 const PREFIX = 'sabaq:';
 
-function read(key, fallback) {
+function readObj(key, fallback) {
   try {
     const raw = window.localStorage.getItem(PREFIX + key);
     return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
@@ -36,49 +38,71 @@ export const DEFAULT_SETTINGS = {
   reduceMotion: false,
 };
 
-export const loadSettings = () => read('settings', DEFAULT_SETTINGS);
+export const loadSettings = () => readObj('settings', DEFAULT_SETTINGS);
 export const saveSettings = (s) => write('settings', s);
 
-export const loadLastSetup = () => read('lastSetup', {});
+export const DEFAULT_PROFILE = { name: 'لاعب', color: 0 };
+export const loadProfile = () => readObj('profile', DEFAULT_PROFILE);
+export const saveProfile = (p) => write('profile', p);
+
+export const loadLastSetup = () => readObj('lastSetup', {});
 export const saveLastSetup = (s) => write('lastSetup', s);
 
-const EMPTY_STATS = { games: 0, questions: 0, correct: 0, bestStreak: 0, bestScore: 0 };
-export const loadStats = () => read('stats', EMPTY_STATS);
+export const EMPTY_STATS = {
+  games: 0,
+  questions: 0,
+  correct: 0,
+  bestStreak: 0,
+  bestScore: 0,
+  rushBestCorrect: 0,
+  steals: 0,
+  riskWins: 0,
+  wins: 0,
+  categories: [],
+  modes: [],
+};
+export const loadStats = () => readObj('stats', EMPTY_STATS);
 export const loadLeaderboard = () => readList('leaderboard');
+export const loadAchievements = () => readList('achievements');
 
-/** Records a finished game once: updates totals and adds every player to the leaderboard. */
-export function recordGame(game) {
-  const seen = readList('recordedGames');
-  if (seen.includes(game.id)) return;
-  const stats = loadStats();
-  const next = { ...stats, games: stats.games + 1 };
-  for (const p of game.players) {
-    next.questions += p.correct + p.wrong + p.timeouts;
-    next.correct += p.correct;
-    next.bestStreak = Math.max(next.bestStreak, p.bestStreak);
-    next.bestScore = Math.max(next.bestScore, p.score);
-  }
-  write('stats', next);
+// Recently asked questions, so new matches prefer questions the group has not seen yet.
+const SEEN_LIMIT = 600;
+export const loadSeenQuestions = () => readList('seen');
+
+/**
+ * Records a finished game once: totals, leaderboard, seen questions and achievements.
+ * Returns the ids of achievements unlocked by this game.
+ */
+export function recordGame(game, { myName, categoryCount }) {
+  const recorded = readList('recordedGames');
+  if (recorded.includes(game.id)) return readList(`unlockedBy:${game.id}`);
+
+  const stats = foldGameIntoStats(loadStats(), game, myName);
+  write('stats', stats);
 
   const date = new Date(game.finishedAt ?? Date.now()).toISOString();
   const entries = game.players.map((p) => {
     const attempts = p.correct + p.wrong + p.timeouts;
-    return {
-      name: p.name,
-      score: p.score,
-      mode: game.modeId,
-      accuracy: attempts ? Math.round((p.correct / attempts) * 100) : 0,
-      date,
-    };
+    return { name: p.name, score: p.score, mode: game.modeId, accuracy: attempts ? Math.round((p.correct / attempts) * 100) : 0, date };
   });
-  const board = [...loadLeaderboard(), ...entries].sort((a, b) => b.score - a.score).slice(0, 100);
-  write('leaderboard', board);
-  write('recordedGames', [...seen, game.id].slice(-50));
+  write('leaderboard', [...loadLeaderboard(), ...entries].sort((a, b) => b.score - a.score).slice(0, 100));
+
+  const seen = [...new Set([...game.usedIds, ...loadSeenQuestions()])].slice(0, SEEN_LIMIT);
+  write('seen', seen);
+
+  const unlocked = loadAchievements();
+  const fresh = evaluateAchievements({ stats, unlocked, categoryCount });
+  write('achievements', [...unlocked, ...fresh]);
+  write(`unlockedBy:${game.id}`, fresh);
+  write('recordedGames', [...recorded, game.id].slice(-30));
+  return fresh;
 }
 
 export function resetProgress() {
   try {
-    ['stats', 'leaderboard', 'recordedGames'].forEach((k) => window.localStorage.removeItem(PREFIX + k));
+    Object.keys(window.localStorage)
+      .filter((k) => k.startsWith(PREFIX) && !['settings', 'profile', 'lastSetup'].some((keep) => k === PREFIX + keep))
+      .forEach((k) => window.localStorage.removeItem(k));
   } catch {
     /* ignore */
   }

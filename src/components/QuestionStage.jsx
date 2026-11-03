@@ -9,7 +9,7 @@ import Feedback from './Feedback.jsx';
 import PowerUpBar from './PowerUpBar.jsx';
 import { QuestionBody } from './question/QuestionBodies.jsx';
 import TimerRing from './TimerRing.jsx';
-import { CategoryTag } from './ui.jsx';
+import { Avatar, CategoryTag } from './ui.jsx';
 
 function valueLabel(current) {
   if (current.wager !== null) return `رهان ${current.wager}`;
@@ -73,7 +73,10 @@ export default function QuestionStage({ game, dispatch, showExplanations }) {
       <div className="qstage__top">
         <div className="qstage__meta">
           <p className="qstage__who">
-            يجيب الآن: <span className="player-name">{player.name}</span>
+            <Avatar name={player.name} color={player.color} size={28} />
+            <span>
+              يجيب الآن: <span className="player-name">{player.name}</span>
+            </span>
           </p>
           <div className="qstage__tags">
             <CategoryTag id={q.category} size="sm" />
@@ -87,7 +90,7 @@ export default function QuestionStage({ game, dispatch, showExplanations }) {
             ))}
           </div>
         </div>
-        <TimerRing msLeft={shownMs} totalMs={totalMs} paused={!answering} label={isClock ? 'وقت الجولة' : 'وقت السؤال'} />
+        <TimerRing msLeft={shownMs} totalMs={totalMs} paused={!answering} label={isClock ? 'وقت الجولة' : 'وقت السؤال'} size={isClock ? 'lg' : 'md'} />
       </div>
 
       <div className="qcard" key={current.token}>

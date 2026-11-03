@@ -1,4 +1,6 @@
 import { useCountdown } from '../hooks/useCountdown.js';
+import { Icon } from './icons.jsx';
+import { Avatar } from './ui.jsx';
 
 function progressOf(game) {
   const { seg, players } = game;
@@ -22,8 +24,9 @@ function ClockBar({ game }) {
   const shown = running ? msLeft : seg.remaining;
   const total = seg.duration * 1000 + (seg.bonusMs ?? 0);
   if (phase === 'intro') return null;
+  const state = running && shown <= 5000 ? ' is-urgent' : running && shown / total <= 0.34 ? ' is-warn' : '';
   return (
-    <div className={`clockbar${shown <= 5000 && running ? ' is-urgent' : ''}`} aria-hidden="true">
+    <div className={`clockbar${state}`} aria-hidden="true">
       <span className="clockbar__fill" style={{ transform: `scaleX(${Math.min(1, shown / total)})` }} />
     </div>
   );
@@ -55,8 +58,8 @@ export default function GameHud({ game, onQuit }) {
           <strong>{seg.title}</strong>
           <span className="hud__progress-text">{progress.text}</span>
         </div>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={onQuit}>
-          إنهاء
+        <button type="button" className="icon-btn" onClick={onQuit} aria-label="إنهاء اللعبة">
+          <Icon name="close" size={20} />
         </button>
       </div>
       <div className="hud__progress" aria-hidden="true">
@@ -66,12 +69,17 @@ export default function GameHud({ game, onQuit }) {
       <ol className="scoreboard" aria-label="النقاط">
         {players.map((p, i) => (
           <li key={p.id} className={`score-chip${i === activeIdx ? ' is-active' : ''}`} style={{ '--player': p.color }}>
-            <span className="score-chip__dot" aria-hidden="true" />
+            <Avatar name={p.name} color={p.color} size={28} />
             <span className="score-chip__name">{p.name}</span>
             <span className="score-chip__score" key={p.score}>
               {p.score}
             </span>
-            {p.streak >= 2 && <span className="score-chip__streak">×{p.streak}</span>}
+            {p.streak >= 2 && (
+              <span className="score-chip__streak">
+                <Icon name="bolt" size={12} />
+                {p.streak}
+              </span>
+            )}
           </li>
         ))}
       </ol>
