@@ -801,6 +801,13 @@
   margin-top: 0;
 }
 
+.results__grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
 .unlocked {
   display: grid;
   gap: 8px;

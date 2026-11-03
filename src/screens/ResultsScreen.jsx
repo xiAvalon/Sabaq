@@ -178,7 +178,7 @@ export default function ResultsScreen() {
                     </span>
                     <span className={`review__pts${h.points < 0 ? ' is-neg' : ''}`}>{h.points > 0 ? `+${h.points}` : h.points}</span>
                   </div>
-                  <p className="review__q">{q?.type === 'whoami' ? q.clues.join(' · ') : h.prompt}</p>
+                  <p className="review__q">{q?.type === 'whoami' ? q.clues.join(' · ') : h.prompt.replace('____', '…')}</p>
                   <p className="review__a">
                     {!h.correct && <span>الإجابة: {givenLabel(h)} · </span>}
                     الصحيحة: <strong>{q ? formatAnswer(q) : String(h.answer)}</strong>

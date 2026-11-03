@@ -81,7 +81,10 @@ export function CategoryTag({ id, size = 'md' }) {
 
 export function Avatar({ name, color, size = 36 }) {
   const c = typeof color === 'number' ? PLAYER_COLORS[color % PLAYER_COLORS.length] : color;
-  const initial = (name ?? '؟').trim().charAt(0) || '؟';
+  const clean = (name ?? '').trim();
+  // "اللاعب 2" / "الفريق 3" read better as their number than as «ا».
+  const numbered = clean.match(/^(?:اللاعب|الفريق)\s+(\d+)$/);
+  const initial = numbered ? numbered[1] : clean.charAt(0) || '؟';
   return (
     <span className="avatar" style={{ '--avatar': c, width: size, height: size, fontSize: size * 0.45 }} aria-hidden="true">
       {initial}
