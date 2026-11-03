@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import TopBar from './components/TopBar.jsx';
 import { GameProvider } from './context/GameContext.jsx';
@@ -7,11 +7,20 @@ import GameScreen from './screens/GameScreen.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
 import HowToPlayScreen from './screens/HowToPlayScreen.jsx';
 import OfflineModesScreen from './screens/OfflineModesScreen.jsx';
-import OnlineScreen from './screens/OnlineScreen.jsx';
 import ResultsScreen from './screens/ResultsScreen.jsx';
 import SettingsScreen from './screens/SettingsScreen.jsx';
 import SetupScreen from './screens/SetupScreen.jsx';
 import StatsScreen from './screens/StatsScreen.jsx';
+import { Spinner } from './components/ui.jsx';
+
+// Online play (and the Supabase client) loads only when someone opens it.
+const OnlineScreen = lazy(() => import('./screens/OnlineScreen.jsx'));
+const RoomScreen = lazy(() => import('./screens/RoomScreen.jsx'));
+const loading = (
+  <div className="center-stack">
+    <Spinner />
+  </div>
+);
 
 // The hosted single-file demo uses an in-memory router; the normal build uses real URLs.
 // eslint-disable-next-line no-undef
@@ -53,7 +62,22 @@ export default function App() {
                 <Route path="/" element={<HomeScreen />} />
                 <Route path="/offline" element={<OfflineModesScreen />} />
                 <Route path="/offline/:modeId" element={<SetupScreen />} />
-                <Route path="/online" element={<OnlineScreen />} />
+                <Route
+                  path="/online"
+                  element={
+                    <Suspense fallback={loading}>
+                      <OnlineScreen />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/room/:code"
+                  element={
+                    <Suspense fallback={loading}>
+                      <RoomScreen />
+                    </Suspense>
+                  }
+                />
                 <Route path="/results" element={<ResultsScreen />} />
                 <Route path="/stats" element={<StatsScreen />} />
                 <Route path="/settings" element={<SettingsScreen />} />

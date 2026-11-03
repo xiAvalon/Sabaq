@@ -38,3 +38,17 @@ full run of every mode.
 **Gaps against the new brief.** No offline/online split, no PWA, no online play, no
 achievements or profile, 18 categories instead of 11, ~9 questions per category, setup is a
 single long form, category picker is a plain grid.
+
+## After the redesign
+
+- **Identity and UI:** design tokens in `src/styles/tokens.css`; shared pieces in
+  `components/ui.jsx`, `icons.jsx`, `brand.jsx`, `CategoryPicker.jsx`, `ModeCard.jsx`,
+  `TimerRing.jsx`.
+- **Routes:** `/` (offline/online choice), `/offline`, `/offline/:mode` (3-step setup), `/play`,
+  `/results`, `/online`, `/room/:code`, `/stats`, `/settings`, `/how-to-play`.
+- **Engine additions:** `achievements.js`; question rotation (`recentIds` soft-avoided by
+  `pool.js`); risk/wager recorded in history.
+- **Data:** 11 categories, 1,120 questions in `src/data/questions/*.js` (legacy builders plus
+  the compact format in `compact.js`).
+- **Offline:** build-time service worker (`vite.config.js`), manifest and icons in `public/`.
+- **Online:** see `docs/ONLINE.md`.
