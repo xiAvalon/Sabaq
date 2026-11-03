@@ -73,7 +73,7 @@ export const loadSeenQuestions = () => readList('seen');
  * Records a finished game once: totals, leaderboard, seen questions and achievements.
  * Returns the ids of achievements unlocked by this game.
  */
-export function recordGame(game, { myName, categoryCount }) {
+export function recordGame(game, { myName, categoryIds }) {
   const recorded = readList('recordedGames');
   if (recorded.includes(game.id)) return readList(`unlockedBy:${game.id}`);
 
@@ -91,7 +91,7 @@ export function recordGame(game, { myName, categoryCount }) {
   write('seen', seen);
 
   const unlocked = loadAchievements();
-  const fresh = evaluateAchievements({ stats, unlocked, categoryCount });
+  const fresh = evaluateAchievements({ stats, unlocked, categoryIds });
   write('achievements', [...unlocked, ...fresh]);
   write(`unlockedBy:${game.id}`, fresh);
   write('recordedGames', [...recorded, game.id].slice(-30));

@@ -4,7 +4,7 @@ import { Icon } from '../components/icons.jsx';
 import { Avatar, CategoryTag, formatSeconds } from '../components/ui.jsx';
 import { useGame } from '../context/GameContext.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
-import { CATEGORIES } from '../data/categories.js';
+import { CATEGORY_IDS } from '../data/categories.js';
 import { ACHIEVEMENTS } from '../engine/achievements.js';
 import { getMode } from '../engine/modes.js';
 import { formatAnswer } from '../engine/questionTypes.js';
@@ -24,7 +24,7 @@ export default function ResultsScreen() {
   const navigate = useNavigate();
   const [record] = useState(() => {
     if (game?.phase !== 'finished') return { unlocked: [], board: [] };
-    const unlocked = recordGame(game, { myName: profile.name, categoryCount: CATEGORIES.length });
+    const unlocked = recordGame(game, { myName: profile.name, categoryIds: CATEGORY_IDS });
     return { unlocked, board: loadLeaderboard() };
   });
 

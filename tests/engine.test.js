@@ -281,3 +281,29 @@ describe('mixed challenge', () => {
     expect(ranked[0].score).toBeGreaterThanOrEqual(ranked[1].score);
   });
 });
+
+describe('categories', () => {
+  it('has exactly the 11 Sabaq categories in order', async () => {
+    const { CATEGORY_IDS, CATEGORIES } = await import('../src/data/categories.js');
+    expect(CATEGORY_IDS).toEqual(['general', 'history', 'geography', 'science', 'technology', 'literature', 'sports', 'football', 'math', 'animals', 'space']);
+    expect(CATEGORIES.map((c) => c.name)).toEqual([
+      'معلومات عامة', 'تاريخ', 'جغرافيا', 'علوم وطبيعة', 'تقنية', 'أدب وكتب', 'رياضة', 'كرة القدم', 'رياضيات', 'حيوانات', 'فضاء وفلك',
+    ]);
+  });
+
+  it('no removed category remains anywhere in the source', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const removed = ['أفلام ومسلسلات', 'طعام وطبخ', 'ألعاب فيديو', 'موسيقى', 'مشاهير', 'اقتصاد وأعمال', 'فن وثقافة'];
+    const removedIds = ['movies', 'food', 'gaming', 'music', 'people', 'business', 'art'];
+    const files = [];
+    const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).forEach((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : files.push(path.join(dir, e.name))));
+    walk('src');
+    for (const f of files) {
+      const text = fs.readFileSync(f, 'utf8');
+      for (const name of removed) expect(text.includes(name), `${name} in ${f}`).toBe(false);
+      for (const id of removedIds) expect(new RegExp(`['"]${id}['"]`).test(text), `${id} in ${f}`).toBe(false);
+    }
+    expect(bank.every((q) => CATEGORY_IDS.includes(q.category))).toBe(true);
+  });
+});

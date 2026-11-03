@@ -7,16 +7,16 @@ export const ACHIEVEMENTS = [
   { id: 'streak-5', icon: 'bolt', title: 'سلسلة ذهبية', desc: 'أجب عن 5 أسئلة صحيحة متتالية.', test: ({ stats }) => stats.bestStreak >= 5 },
   { id: 'streak-10', icon: 'flame', title: 'لا يُوقَف', desc: 'أجب عن 10 أسئلة صحيحة متتالية.', test: ({ stats }) => stats.bestStreak >= 10 },
   { id: 'correct-100', icon: 'book', title: 'موسوعة متنقلة', desc: 'اجمع 100 إجابة صحيحة.', test: ({ stats }) => stats.correct >= 100 },
-  { id: 'all-categories', icon: 'compass', title: 'رحّالة المعرفة', desc: 'العب في كل الفئات.', test: ({ stats, categoryCount }) => (stats.categories?.length ?? 0) >= categoryCount },
+  { id: 'all-categories', icon: 'compass', title: 'رحّالة المعرفة', desc: 'العب في كل الفئات.', test: ({ stats, categoryIds }) => categoryIds.every((id) => (stats.categories ?? []).includes(id)) },
   { id: 'all-modes', icon: 'star', title: 'متعدد المواهب', desc: 'جرّب أنماط اللعب الأربعة.', test: ({ stats }) => (stats.modes?.length ?? 0) >= 4 },
   { id: 'thief', icon: 'hand', title: 'سارق محترف', desc: 'اسرق نقاط منافسك بإجابة صحيحة.', test: ({ stats }) => stats.steals >= 1 },
   { id: 'risk', icon: 'dice', title: 'قلب أسد', desc: 'اربح سؤال مخاطرة أو رهانًا أخيرًا.', test: ({ stats }) => stats.riskWins >= 1 },
   { id: 'winner', icon: 'trophy', title: 'بطل الطاولة', desc: 'افز في مباراة ضد لاعب آخر.', test: ({ stats }) => stats.wins >= 1 },
 ];
 
-export function evaluateAchievements({ stats, unlocked = [], categoryCount }) {
+export function evaluateAchievements({ stats, unlocked = [], categoryIds }) {
   const have = new Set(unlocked);
-  return ACHIEVEMENTS.filter((a) => !have.has(a.id) && a.test({ stats, categoryCount })).map((a) => a.id);
+  return ACHIEVEMENTS.filter((a) => !have.has(a.id) && a.test({ stats, categoryIds })).map((a) => a.id);
 }
 
 /** Folds one finished match into the saved totals. */
