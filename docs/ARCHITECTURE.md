@@ -1,0 +1,40 @@
+# Sabaq — architecture
+
+## Phase 1 audit (state before the redesign, commit 3951b7b)
+
+**Stack.** React 18 + Vite 5, plain JavaScript, global CSS split by area, React Router 6
+(`BrowserRouter` with `basename = import.meta.env.BASE_URL`, base `/Sabaq/`), Vitest.
+GitHub Actions builds `dist/`, copies `index.html` to `404.html` and deploys to Pages.
+
+**Engine (`src/engine/`, no React).**
+- `gameReducer.js`: the whole match as a pure reducer. Each action carries `now` and `seed`, so
+  time and randomness are injected. Phases: `intro`, `board`, `risk`, `wager`, `question`,
+  `feedback`, `finished`.
+- `modes.js`: a mode is a list of segments. Segment types: `clock` (per-player countdown),
+  `board` (category × value grid), `turns` (alternating turns with steals and bonus rounds) and
+  `wager` (final bet).
+- `questionTypes.js`: registry of 8 types (mcq, truefalse, open, number, complete, whoami,
+  sequence, image) with input kind, validation and answer checking.
+- `normalize.js`: Arabic answer normalisation (diacritics, hamza forms, ة/ه, ى/ي, «ال»,
+  Arabic-Indic digits) plus Levenshtein typo tolerance.
+- `scoring.js`, `pool.js` (no repeats in a match), `setup.js`, `stats.js`, `config.js`.
+
+**Modes.** سباق الساعة (clock), تحدي الفئات (board), وجهًا لوجه (turns, 2 players),
+التحدي الشامل (board → 30 s clock → wager). All local pass-and-play.
+
+**Questions.** 162 across 18 categories (8–10 each), plain objects in
+`src/data/questions/<category>.js`, loaded through `services/questionRepository.js`.
+
+**UI.** Screens: Home, Setup (all options on one page), Game, Results, Settings, How to play,
+Stats. Components: HUD, intro card, board, risk/wager panels, question stage, answer inputs,
+power-up bar, feedback, timer ring.
+
+**Persistence.** `services/storage.js` (localStorage, guarded): settings, last setup, stats,
+leaderboard.
+
+**Tests.** `tests/engine.test.js`, 17 tests: bank validity, matching, scoring, pool, and a
+full run of every mode.
+
+**Gaps against the new brief.** No offline/online split, no PWA, no online play, no
+achievements or profile, 18 categories instead of 11, ~9 questions per category, setup is a
+single long form, category picker is a plain grid.
