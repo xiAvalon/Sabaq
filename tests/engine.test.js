@@ -18,12 +18,31 @@ describe('question bank', () => {
   it('ids are unique', () => {
     expect(new Set(bank.map((q) => q.id)).size).toBe(bank.length);
   });
-  it('each category has every difficulty and enough questions', () => {
+  it('each category has at least 100 questions with a 40/40/20-style difficulty mix', () => {
     for (const cat of CATEGORY_IDS) {
       const qs = bank.filter((q) => q.category === cat);
-      expect(qs.length, cat).toBeGreaterThanOrEqual(8);
-      for (const d of [1, 2, 3]) expect(qs.some((q) => q.difficulty === d), `${cat} d${d}`).toBe(true);
+      expect(qs.length, cat).toBeGreaterThanOrEqual(100);
+      const share = (d) => qs.filter((q) => q.difficulty === d).length / qs.length;
+      expect(share(1), `${cat} easy`).toBeGreaterThan(0.33);
+      expect(share(2), `${cat} medium`).toBeGreaterThan(0.33);
+      expect(share(3), `${cat} hard`).toBeGreaterThan(0.15);
     }
+  });
+
+  it('has no duplicate questions (same text, clues, sequence and media)', () => {
+    const key = (q) => [q.prompt, ...(q.clues ?? []), ...(q.sequence ?? []), q.media?.svg ?? q.media?.char ?? ''].join('|').replace(/\s+/g, ' ');
+    const seen = new Map();
+    const dups = [];
+    for (const q of bank) {
+      const k = key(q);
+      if (seen.has(k)) dups.push([seen.get(k), q.id]);
+      seen.set(k, q.id);
+    }
+    expect(dups).toEqual([]);
+  });
+
+  it('typed answers are not trivially accepted by a wrong common word', () => {
+    for (const q of bank.filter((x) => x.type === 'open')) expect(checkAnswer(q, 'لا أعرف'), q.id).toBe(false);
   });
   it('covers all 8 question types', () => {
     expect(new Set(bank.map((q) => q.type)).size).toBe(8);
