@@ -1,18 +1,32 @@
-import { useEffect } from 'react';
-import { BrowserRouter, MemoryRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { SettingsProvider } from './context/SettingsContext.jsx';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, MemoryRouter, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import TopBar from './components/TopBar.jsx';
 import { GameProvider } from './context/GameContext.jsx';
-import HomeScreen from './screens/HomeScreen.jsx';
-import SetupScreen from './screens/SetupScreen.jsx';
+import { SettingsProvider } from './context/SettingsContext.jsx';
 import GameScreen from './screens/GameScreen.jsx';
+import HomeScreen from './screens/HomeScreen.jsx';
+import HowToPlayScreen from './screens/HowToPlayScreen.jsx';
+import OfflineModesScreen from './screens/OfflineModesScreen.jsx';
 import ResultsScreen from './screens/ResultsScreen.jsx';
 import SettingsScreen from './screens/SettingsScreen.jsx';
-import HowToPlayScreen from './screens/HowToPlayScreen.jsx';
+import SetupScreen from './screens/SetupScreen.jsx';
 import StatsScreen from './screens/StatsScreen.jsx';
+import { Spinner } from './components/ui.jsx';
+
+// Online play (and the Supabase client) loads only when someone opens it.
+const OnlineScreen = lazy(() => import('./screens/OnlineScreen.jsx'));
+const RoomScreen = lazy(() => import('./screens/RoomScreen.jsx'));
+const loading = (
+  <div className="center-stack">
+    <Spinner />
+  </div>
+);
 
 // The hosted single-file demo uses an in-memory router; the normal build uses real URLs.
 // eslint-disable-next-line no-undef
-const Router = typeof __ROUTER__ !== 'undefined' && __ROUTER__ === 'memory' ? MemoryRouter : BrowserRouter;
+const IS_MEMORY = typeof __ROUTER__ !== 'undefined' && __ROUTER__ === 'memory';
+const Router = IS_MEMORY ? MemoryRouter : BrowserRouter;
+const routerProps = IS_MEMORY ? {} : { basename: import.meta.env.BASE_URL };
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -22,21 +36,55 @@ function ScrollToTop() {
   return null;
 }
 
+function WithTopBar() {
+  return (
+    <>
+      <TopBar />
+      <Outlet />
+    </>
+  );
+}
+
+function LegacySetupRedirect() {
+  const { modeId } = useParams();
+  return <Navigate to={`/offline/${modeId}`} replace />;
+}
+
 export default function App() {
   return (
     <SettingsProvider>
       <GameProvider>
-        <Router basename={import.meta.env.BASE_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Router {...routerProps} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ScrollToTop />
           <div className="app">
             <Routes>
-              <Route path="/" element={<HomeScreen />} />
-              <Route path="/setup/:modeId" element={<SetupScreen />} />
+              <Route element={<WithTopBar />}>
+                <Route path="/" element={<HomeScreen />} />
+                <Route path="/offline" element={<OfflineModesScreen />} />
+                <Route path="/offline/:modeId" element={<SetupScreen />} />
+                <Route
+                  path="/online"
+                  element={
+                    <Suspense fallback={loading}>
+                      <OnlineScreen />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/room/:code"
+                  element={
+                    <Suspense fallback={loading}>
+                      <RoomScreen />
+                    </Suspense>
+                  }
+                />
+                <Route path="/results" element={<ResultsScreen />} />
+                <Route path="/stats" element={<StatsScreen />} />
+                <Route path="/settings" element={<SettingsScreen />} />
+                <Route path="/how-to-play" element={<HowToPlayScreen />} />
+              </Route>
               <Route path="/play" element={<GameScreen />} />
-              <Route path="/results" element={<ResultsScreen />} />
-              <Route path="/settings" element={<SettingsScreen />} />
-              <Route path="/how-to-play" element={<HowToPlayScreen />} />
-              <Route path="/stats" element={<StatsScreen />} />
+              <Route path="/setup/:modeId" element={<LegacySetupRedirect />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>

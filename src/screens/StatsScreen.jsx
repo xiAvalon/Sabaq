@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { PageHeader, Segmented } from '../components/ui.jsx';
+import { Icon } from '../components/icons.jsx';
+import { EmptyState, PageHeader, Segmented } from '../components/ui.jsx';
+import { ACHIEVEMENTS } from '../engine/achievements.js';
 import { MODES, getMode } from '../engine/modes.js';
-import { loadLeaderboard, loadStats } from '../services/storage.js';
+import { loadAchievements, loadLeaderboard, loadStats } from '../services/storage.js';
 
 const dateFmt = (iso) => {
   try {
-    return new Intl.DateTimeFormat('ar-SA-u-nu-latn', { day: 'numeric', month: 'short' }).format(new Date(iso));
+    return new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory', { day: 'numeric', month: 'short' }).format(new Date(iso));
   } catch {
     return iso.slice(0, 10);
   }
@@ -14,16 +16,17 @@ const dateFmt = (iso) => {
 export default function StatsScreen() {
   const [stats] = useState(loadStats);
   const [board] = useState(loadLeaderboard);
+  const [unlocked] = useState(loadAchievements);
   const [filter, setFilter] = useState('all');
   const rows = board.filter((e) => filter === 'all' || e.mode === filter).slice(0, 10);
   const accuracy = stats.questions ? Math.round((stats.correct / stats.questions) * 100) : 0;
 
   return (
-    <div className="stats">
-      <PageHeader title="الإحصائيات" />
+    <div className="screen">
+      <PageHeader title="الإحصائيات والإنجازات" subtitle="تُحفظ على هذا الجهاز فقط." />
       <dl className="tiles">
         <div className="tile">
-          <dt>ألعاب منتهية</dt>
+          <dt>مباريات</dt>
           <dd>{stats.games}</dd>
         </div>
         <div className="tile">
@@ -31,12 +34,12 @@ export default function StatsScreen() {
           <dd>{stats.questions}</dd>
         </div>
         <div className="tile">
-          <dt>دقة الإجابات</dt>
+          <dt>الدقة</dt>
           <dd>{accuracy}٪</dd>
         </div>
         <div className="tile">
-          <dt>أطول سلسلة</dt>
-          <dd>{stats.bestStreak}</dd>
+          <dt>أفضل 30 ثانية</dt>
+          <dd>{stats.rushBestCorrect ?? 0}</dd>
         </div>
         <div className="tile tile--gold">
           <dt>أعلى نتيجة</dt>
@@ -44,8 +47,34 @@ export default function StatsScreen() {
         </div>
       </dl>
 
-      <section className="panel">
-        <div className="panel__head">
+      <section className="card">
+        <div className="card__head">
+          <h2>الإنجازات</h2>
+          <span className="card__hint">
+            {unlocked.length} من {ACHIEVEMENTS.length}
+          </span>
+        </div>
+        <ul className="achievements">
+          {ACHIEVEMENTS.map((a) => {
+            const on = unlocked.includes(a.id);
+            return (
+              <li key={a.id} className={`achievement${on ? ' is-unlocked' : ''}`}>
+                <span className="achievement__icon">
+                  <Icon name={on ? a.icon : 'lock'} />
+                </span>
+                <span>
+                  <span className="achievement__title">{a.title}</span>
+                  <br />
+                  <span className="achievement__desc">{a.desc}</span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section className="card">
+        <div className="card__head">
           <h2>لوحة الصدارة</h2>
           <Segmented
             id="board-filter"
@@ -83,7 +112,9 @@ export default function StatsScreen() {
             </table>
           </div>
         ) : (
-          <p className="muted">لا توجد نتائج بعد. أنهِ لعبة لتظهر هنا.</p>
+          <EmptyState icon="trophy" title="لا نتائج بعد">
+            أنهِ مباراة لتظهر نتيجتك هنا.
+          </EmptyState>
         )}
       </section>
     </div>

@@ -18,12 +18,31 @@ describe('question bank', () => {
   it('ids are unique', () => {
     expect(new Set(bank.map((q) => q.id)).size).toBe(bank.length);
   });
-  it('each category has every difficulty and enough questions', () => {
+  it('each category has at least 100 questions with a 40/40/20-style difficulty mix', () => {
     for (const cat of CATEGORY_IDS) {
       const qs = bank.filter((q) => q.category === cat);
-      expect(qs.length, cat).toBeGreaterThanOrEqual(8);
-      for (const d of [1, 2, 3]) expect(qs.some((q) => q.difficulty === d), `${cat} d${d}`).toBe(true);
+      expect(qs.length, cat).toBeGreaterThanOrEqual(100);
+      const share = (d) => qs.filter((q) => q.difficulty === d).length / qs.length;
+      expect(share(1), `${cat} easy`).toBeGreaterThan(0.33);
+      expect(share(2), `${cat} medium`).toBeGreaterThan(0.33);
+      expect(share(3), `${cat} hard`).toBeGreaterThan(0.15);
     }
+  });
+
+  it('has no duplicate questions (same text, clues, sequence and media)', () => {
+    const key = (q) => [q.prompt, ...(q.clues ?? []), ...(q.sequence ?? []), q.media?.svg ?? q.media?.char ?? ''].join('|').replace(/\s+/g, ' ');
+    const seen = new Map();
+    const dups = [];
+    for (const q of bank) {
+      const k = key(q);
+      if (seen.has(k)) dups.push([seen.get(k), q.id]);
+      seen.set(k, q.id);
+    }
+    expect(dups).toEqual([]);
+  });
+
+  it('typed answers are not trivially accepted by a wrong common word', () => {
+    for (const q of bank.filter((x) => x.type === 'open')) expect(checkAnswer(q, 'لا أعرف'), q.id).toBe(false);
   });
   it('covers all 8 question types', () => {
     expect(new Set(bank.map((q) => q.type)).size).toBe(8);
@@ -279,5 +298,31 @@ describe('mixed challenge', () => {
     expect(new Set(ids).size).toBe(ids.length);
     const ranked = rankPlayers(s.players);
     expect(ranked[0].score).toBeGreaterThanOrEqual(ranked[1].score);
+  });
+});
+
+describe('categories', () => {
+  it('has exactly the 11 Sabaq categories in order', async () => {
+    const { CATEGORY_IDS, CATEGORIES } = await import('../src/data/categories.js');
+    expect(CATEGORY_IDS).toEqual(['general', 'history', 'geography', 'science', 'technology', 'literature', 'sports', 'football', 'math', 'animals', 'space']);
+    expect(CATEGORIES.map((c) => c.name)).toEqual([
+      'معلومات عامة', 'تاريخ', 'جغرافيا', 'علوم وطبيعة', 'تقنية', 'أدب وكتب', 'رياضة', 'كرة القدم', 'رياضيات', 'حيوانات', 'فضاء وفلك',
+    ]);
+  });
+
+  it('no removed category remains anywhere in the source', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const removed = ['أفلام ومسلسلات', 'طعام وطبخ', 'ألعاب فيديو', 'موسيقى', 'مشاهير', 'اقتصاد وأعمال', 'فن وثقافة'];
+    const removedIds = ['movies', 'food', 'gaming', 'music', 'people', 'business', 'art'];
+    const files = [];
+    const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).forEach((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : files.push(path.join(dir, e.name))));
+    walk('src');
+    for (const f of files) {
+      const text = fs.readFileSync(f, 'utf8');
+      for (const name of removed) expect(text.includes(name), `${name} in ${f}`).toBe(false);
+      for (const id of removedIds) expect(new RegExp(`['"]${id}['"]`).test(text), `${id} in ${f}`).toBe(false);
+    }
+    expect(bank.every((q) => CATEGORY_IDS.includes(q.category))).toBe(true);
   });
 });

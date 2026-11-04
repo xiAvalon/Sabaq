@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { createGame, gameReducer } from '../engine/gameReducer.js';
 import { loadQuestions } from '../services/questionRepository.js';
+import { loadSeenQuestions } from '../services/storage.js';
 
 const GameContext = createContext(null);
 
@@ -28,7 +29,10 @@ export function GameProvider({ children }) {
   const startGame = useCallback(
     (modeId, config) => {
       if (!bank) return false;
-      rawDispatch({ type: 'NEW', game: createGame({ modeId, config, bank, now: Date.now(), seed: Math.random() }) });
+      rawDispatch({
+        type: 'NEW',
+        game: createGame({ modeId, config, bank, recentIds: loadSeenQuestions(), now: Date.now(), seed: Math.random() }),
+      });
       return true;
     },
     [bank],

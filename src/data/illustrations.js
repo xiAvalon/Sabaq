@@ -57,3 +57,37 @@ export const CHESSBOARD = wrap(
     }).join('') +
     '<rect x="70" y="20" width="160" height="160" fill="none" stroke="#ffc23d" stroke-width="3"/>',
 );
+
+// ---- simple flags (geometric only) ----
+const vbar = (a, b, c) => wrap(`<rect width="100" height="200" fill="${a}"/><rect x="100" width="100" height="200" fill="${b}"/><rect x="200" width="100" height="200" fill="${c}"/>`);
+const hbar = (a, b, c) => wrap(`<rect width="300" height="67" fill="${a}"/><rect y="67" width="300" height="66" fill="${b}"/><rect y="133" width="300" height="67" fill="${c}"/>`);
+const h2 = (a, b) => wrap(`<rect width="300" height="100" fill="${a}"/><rect y="100" width="300" height="100" fill="${b}"/>`);
+
+export const FLAG_FRANCE = vbar('#002654', '#ffffff', '#ce1126');
+export const FLAG_IRELAND = vbar('#169b62', '#ffffff', '#ff883e');
+export const FLAG_NIGERIA = vbar('#008751', '#ffffff', '#008751');
+export const FLAG_BELGIUM = vbar('#000000', '#fdda24', '#ef3340');
+export const FLAG_NETHERLANDS = hbar('#ae1c28', '#ffffff', '#21468b');
+export const FLAG_RUSSIA = hbar('#ffffff', '#0039a6', '#d52b1e');
+export const FLAG_AUSTRIA = hbar('#ed2939', '#ffffff', '#ed2939');
+export const FLAG_INDONESIA = h2('#ce1126', '#ffffff');
+export const FLAG_POLAND = h2('#ffffff', '#dc143c');
+export const FLAG_UKRAINE = h2('#0057b7', '#ffd700');
+export const FLAG_BANGLADESH = wrap('<rect width="300" height="200" fill="#006a4e"/><circle cx="135" cy="100" r="60" fill="#f42a41"/>');
+export const FLAG_SWITZERLAND = wrap('<rect width="300" height="200" fill="#d52b1e"/><rect x="130" y="40" width="40" height="120" fill="#ffffff"/><rect x="90" y="80" width="120" height="40" fill="#ffffff"/>');
+export const FLAG_SWEDEN = wrap('<rect width="300" height="200" fill="#006aa7"/><rect x="90" width="36" height="200" fill="#fecc00"/><rect y="82" width="300" height="36" fill="#fecc00"/>');
+export const FLAG_DENMARK = wrap('<rect width="300" height="200" fill="#c8102e"/><rect x="90" width="30" height="200" fill="#ffffff"/><rect y="85" width="300" height="30" fill="#ffffff"/>');
+export const FLAG_FINLAND = wrap('<rect width="300" height="200" fill="#ffffff"/><rect x="85" width="50" height="200" fill="#002f6c"/><rect y="75" width="300" height="50" fill="#002f6c"/>');
+
+// ---- shapes and diagrams ----
+const panel = (body) => wrap(`<rect width="300" height="200" fill="#10183a"/>${body}`);
+export const TRIANGLE = panel('<polygon points="150,30 240,170 60,170" fill="#ffc857" stroke="#f5f6fa" stroke-width="5"/>');
+export const PENTAGON = panel('<polygon points="150,25 228,82 198,172 102,172 72,82" fill="#5be3a6" stroke="#f5f6fa" stroke-width="5"/>');
+export const OCTAGON = panel('<polygon points="118,25 182,25 228,71 228,129 182,175 118,175 72,129 72,71" fill="#ff5c7a" stroke="#f5f6fa" stroke-width="5"/>');
+export const RIGHT_ANGLE = panel('<polyline points="80,40 80,160 220,160" fill="none" stroke="#32c5d2" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><rect x="80" y="135" width="25" height="25" fill="none" stroke="#ffc857" stroke-width="4"/>');
+export const CRESCENT_MOON = panel('<circle cx="150" cy="100" r="62" fill="#f5f6fa"/><circle cx="178" cy="88" r="56" fill="#10183a"/><circle cx="60" cy="40" r="2" fill="#fff"/><circle cx="250" cy="150" r="2" fill="#fff"/>');
+export const FULL_MOON = panel('<circle cx="150" cy="100" r="62" fill="#e9e6d8"/><circle cx="128" cy="82" r="12" fill="#cfcab4"/><circle cx="170" cy="115" r="16" fill="#cfcab4"/><circle cx="150" cy="70" r="7" fill="#cfcab4"/>');
+export const EARTH_DAY_NIGHT = panel('<circle cx="150" cy="100" r="64" fill="#2a6fdb"/><path d="M150 36 A64 64 0 0 1 150 164 Z" fill="#0b1022" opacity="0.7"/><path d="M120 70 q15 -12 30 0 q8 18 -8 26 q-20 4 -22 -26z" fill="#5be3a6"/><circle cx="40" cy="100" r="22" fill="#ffc857"/>');
+export const BAR_MAGNET = panel('<rect x="60" y="80" width="90" height="44" fill="#ff5c7a"/><rect x="150" y="80" width="90" height="44" fill="#5fa8ff"/><text x="105" y="110" font-family="sans-serif" font-size="26" font-weight="700" fill="#fff" text-anchor="middle">N</text><text x="195" y="110" font-family="sans-serif" font-size="26" font-weight="700" fill="#fff" text-anchor="middle">S</text>');
+export const NUMBER_LINE = panel('<line x1="30" y1="110" x2="270" y2="110" stroke="#f5f6fa" stroke-width="4"/>' + [0, 1, 2, 3, 4, 5, 6].map((i) => `<line x1="${45 + i * 35}" y1="98" x2="${45 + i * 35}" y2="122" stroke="#f5f6fa" stroke-width="3"/>`).join('') + '<circle cx="185" cy="110" r="10" fill="#ffc857"/><text x="45" y="150" font-family="sans-serif" font-size="20" fill="#b3b8d6" text-anchor="middle">0</text><text x="255" y="150" font-family="sans-serif" font-size="20" fill="#b3b8d6" text-anchor="middle">6</text>');
+export const PIE_QUARTER = panel('<circle cx="150" cy="100" r="70" fill="#283056"/><path d="M150 100 L150 30 A70 70 0 0 1 220 100 Z" fill="#32c5d2"/><circle cx="150" cy="100" r="70" fill="none" stroke="#f5f6fa" stroke-width="3"/>');

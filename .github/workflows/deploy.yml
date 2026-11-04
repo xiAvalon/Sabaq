@@ -24,7 +24,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - run: npm test
       - run: npm run build
+        env:
+          # Set these as repository variables (Settings → Secrets and variables → Actions → Variables).
+          # Both are public values; without them the site builds as offline-only.
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

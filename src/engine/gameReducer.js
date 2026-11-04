@@ -28,7 +28,7 @@ export const maxWager = (player) => Math.max(player.score, SCORING.minWagerCap);
 const updatePlayer = (players, idx, patch) => players.map((p, i) => (i === idx ? { ...p, ...patch } : p));
 
 function draw(state, criteria, rng) {
-  return pickQuestion(state.bank, state.usedIds, criteria, rng);
+  return pickQuestion(state.bank, state.usedIds, { avoidIds: state.recentIds, ...criteria }, rng);
 }
 
 function clockLevel(state) {
@@ -261,6 +261,8 @@ function resolve(state, { answer, timedOut, now }) {
       points: breakdown.points,
       ms: elapsed,
       steal: c.isSteal,
+      risk: c.risk,
+      wager: c.wager,
       segment: seg.type,
     },
   ];
@@ -376,7 +378,7 @@ export function createPlayers(names, powerupCount) {
   }));
 }
 
-export function createGame({ modeId, config, bank, now = Date.now(), seed = Math.random() }) {
+export function createGame({ modeId, config, bank, recentIds = [], now = Date.now(), seed = Math.random() }) {
   const mode = getMode(modeId);
   if (!mode) throw new Error(`Unknown mode ${modeId}`);
   const rng = mulberry32(seed);
@@ -385,6 +387,7 @@ export function createGame({ modeId, config, bank, now = Date.now(), seed = Math
     modeId,
     config,
     bank,
+    recentIds: new Set(recentIds),
     players: createPlayers(config.players, config.powerups ?? 1),
     segments: mode.buildSegments(config),
     segIndex: -1,

@@ -1,42 +1,49 @@
-/* Layout: a TV studio stage — lit marquee title, a central podium card, scoreboard rail above.
-   Deliberately a single dark look (the game is played under "studio lights"). */
+/* Sabaq design tokens.
+   Layout: a calm navy arena; one bright object per screen (the dial, the active card, the question).
+   Single dark look by design: the game is played under "studio lights". */
 :root {
   color-scheme: dark;
-  --stage: #0d1030;
-  --stage-deep: #080a22;
-  --panel: #171c4a;
-  --panel-hi: #20275f;
-  --line: #2f377c;
-  --line-hi: #4650a8;
-  --ink: #f6f3ff;
-  --ink-dim: #a9afdc;
-  --ink-faint: #737ab3;
-  --bulb: #ffc23d;
-  --bulb-hot: #fff1c7;
-  --bulb-deep: #c98a00;
-  --flare: #ff5d73;
-  --good: #34e3a4;
-  --good-deep: #0d6e4f;
-  --bad: #ff4d5e;
-  --bad-deep: #7a1626;
-  --info: #5cc8ff;
-  --on-bulb: #1a1300;
 
-  --font-display: 'Lalezar', 'Readex Pro', 'Segoe UI', Tahoma, sans-serif;
-  --font-body: 'Readex Pro', 'Segoe UI', Tahoma, 'Noto Sans Arabic', sans-serif;
+  /* palette */
+  --navy: #11172e;
+  --navy-deep: #0b1022;
+  --surface: #202745;
+  --surface-2: #283056;
+  --surface-3: #313a68;
+  --line: rgba(245, 246, 250, 0.08);
+  --line-strong: rgba(245, 246, 250, 0.16);
+  --ink: #f5f6fa;
+  --ink-2: #b3b8d6;
+  --ink-3: #7d84aa;
+  --indigo: #5146d8;
+  --indigo-hi: #6a5ff0;
+  --indigo-deep: #3b32ad;
+  --cyan: #32c5d2;
+  --cyan-deep: #138e99;
+  --gold: #ffc857;
+  --gold-deep: #c9932a;
+  --good: #3ddc97;
+  --bad: #ff5c7a;
+  --on-gold: #2a1d00;
 
+  /* type */
+  --font-display: 'Reem Kufi', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, 'Noto Sans Arabic', sans-serif;
   --step--1: 0.8125rem;
   --step-0: 1rem;
   --step-1: 1.1875rem;
   --step-2: 1.5rem;
-  --step-3: clamp(1.75rem, 1.3rem + 2vw, 2.4rem);
-  --step-4: clamp(2.4rem, 1.6rem + 4vw, 4rem);
+  --step-3: clamp(1.75rem, 1.35rem + 1.8vw, 2.35rem);
+  --step-4: clamp(2.25rem, 1.5rem + 3.4vw, 3.6rem);
 
-  --radius: 18px;
-  --radius-sm: 12px;
-  --radius-pill: 999px;
-  --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
-  --glow-bulb: 0 0 0 1px rgba(255, 194, 61, 0.5), 0 0 28px -4px rgba(255, 194, 61, 0.55);
-  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur: 220ms;
+  /* shape and motion */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 18px 40px -24px rgba(0, 0, 0, 0.8);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-pop: cubic-bezier(0.34, 1.5, 0.64, 1);
+  --dur: 200ms;
 }
