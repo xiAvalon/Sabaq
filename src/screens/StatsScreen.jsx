@@ -3,6 +3,7 @@ import { Icon } from '../components/icons.jsx';
 import { EmptyState, PageHeader, Segmented } from '../components/ui.jsx';
 import { ACHIEVEMENTS } from '../engine/achievements.js';
 import { MODES, getMode } from '../engine/modes.js';
+import { CATEGORY_IDS } from '../data/categories.js';
 import { loadAchievements, loadLeaderboard, loadStats } from '../services/storage.js';
 
 const dateFmt = (iso) => {
@@ -23,7 +24,7 @@ export default function StatsScreen() {
 
   return (
     <div className="screen">
-      <PageHeader title="الإحصائيات والإنجازات" subtitle="تُحفظ على هذا الجهاز فقط." />
+      <PageHeader title="الإحصائيات والإنجازات" subtitle="أرقامك وإنجازاتك من المباريات على هذا الجهاز، وتُحفظ عليه فقط." />
       <dl className="tiles">
         <div className="tile">
           <dt>مباريات</dt>
@@ -57,15 +58,33 @@ export default function StatsScreen() {
         <ul className="achievements">
           {ACHIEVEMENTS.map((a) => {
             const on = unlocked.includes(a.id);
+            const done = on ? a.target : Math.min(a.target, a.progress({ stats, categoryIds: CATEGORY_IDS }));
             return (
               <li key={a.id} className={`achievement${on ? ' is-unlocked' : ''}`}>
                 <span className="achievement__icon">
                   <Icon name={on ? a.icon : 'lock'} />
                 </span>
-                <span>
+                <span className="achievement__body">
                   <span className="achievement__title">{a.title}</span>
-                  <br />
                   <span className="achievement__desc">{a.desc}</span>
+                  {a.target > 1 && (
+                    <span className="achievement__progress">
+                      <span
+                        className="achievement__bar"
+                        role="progressbar"
+                        aria-label={`تقدم ${a.title}`}
+                        aria-valuemin={0}
+                        aria-valuemax={a.target}
+                        aria-valuenow={done}
+                      >
+                        <span style={{ width: `${(done / a.target) * 100}%` }} />
+                      </span>
+                      <span className="achievement__count num-ltr">
+                        {done}/{a.target}
+                      </span>
+                    </span>
+                  )}
+                  {on && <span className="achievement__state">مفتوح</span>}
                 </span>
               </li>
             );

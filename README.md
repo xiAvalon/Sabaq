@@ -25,8 +25,14 @@ npm run seed:questions   # regenerate supabase/seed_questions.sql after editing 
 - **11 categories, 1,120 questions,** about 40% easy / 40% medium / 20% hard, in 8 question
   types (multiple choice, true/false, typed answer, number, complete the phrase, who am I,
   what comes next, image).
-- Streak bonuses, power-ups (50:50, +10 s, ×2, swap), achievements, statistics, local
-  leaderboard, guest profile, question rotation across matches.
+- Streak bonuses, power-ups (50:50, +10 s, ×2, swap), achievements with progress, statistics,
+  local leaderboard, guest profile with avatar, level and rank (computed from local stats only),
+  question rotation across matches.
+- **Dark and light themes** (dark by default, remembered per device), one self-hosted typeface
+  (IBM Plex Sans Arabic).
+- **Accounts preview:** `/login` and `/signup` are front-end only. They validate input and then
+  say plainly that accounts are not live yet: no request is sent and nothing is stored.
+  Global leaderboard and friends on `/community` are clearly labelled previews with sample data.
 
 ## Layout
 
@@ -36,7 +42,8 @@ src/data/         categories, questions (one file per category), compact authori
 src/online/       Supabase client, RPC wrappers, useRoom hook
 src/components/   UI (design-system pieces, question views, online lobby and game)
 src/screens/      routed screens
-src/styles/       tokens, base, ui, layout, screens, game
+src/styles/       fonts, tokens (both themes), base, ui, layout, screens, game, feedback, auth, extras, theme-light
+src/assets/fonts/ self-hosted IBM Plex Sans Arabic (OFL)
 supabase/         migration (tables, RLS, functions) and generated question seed
 docs/             ARCHITECTURE.md, ONLINE.md
 ```

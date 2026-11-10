@@ -6,11 +6,15 @@ import { GameProvider } from './context/GameContext.jsx';
 import { SettingsProvider } from './context/SettingsContext.jsx';
 import GameScreen from './screens/GameScreen.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
+import CommunityScreen from './screens/CommunityScreen.jsx';
 import HowToPlayScreen from './screens/HowToPlayScreen.jsx';
+import LoginScreen from './screens/LoginScreen.jsx';
 import OfflineModesScreen from './screens/OfflineModesScreen.jsx';
+import ProfileScreen from './screens/ProfileScreen.jsx';
 import ResultsScreen from './screens/ResultsScreen.jsx';
 import SettingsScreen from './screens/SettingsScreen.jsx';
 import SetupScreen from './screens/SetupScreen.jsx';
+import SignupScreen from './screens/SignupScreen.jsx';
 import StatsScreen from './screens/StatsScreen.jsx';
 import { Spinner } from './components/ui.jsx';
 
@@ -84,7 +88,11 @@ export default function App() {
                   <Route path="/stats" element={<StatsScreen />} />
                   <Route path="/settings" element={<SettingsScreen />} />
                   <Route path="/how-to-play" element={<HowToPlayScreen />} />
+                  <Route path="/profile" element={<ProfileScreen />} />
+                  <Route path="/community" element={<CommunityScreen />} />
                 </Route>
+                <Route path="/login" element={<LoginScreen />} />
+                <Route path="/signup" element={<SignupScreen />} />
                 <Route path="/play" element={<GameScreen />} />
                 <Route path="/setup/:modeId" element={<LegacySetupRedirect />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

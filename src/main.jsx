@@ -9,6 +9,7 @@ import './styles/layout.css';
 import './styles/screens.css';
 import './styles/game.css';
 import './styles/feedback.css';
+import './styles/auth.css';
 import './styles/extras.css';
 import './styles/theme-light.css';
 
