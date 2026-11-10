@@ -1,0 +1,28 @@
+/* Light theme: the few places where a bright player/category colour is used as TEXT.
+   On white those colours are too pale, so they are mixed toward the ink colour. Fills,
+   borders and selected states keep the original colour. */
+:root[data-theme='light'] :is(.player-name, .score-chip__score, .intro__heading, .standing__score, .roster__score, .results__headline) {
+  color: color-mix(in srgb, var(--player, var(--ink)) var(--accent-text-mix), #171c32);
+}
+
+:root[data-theme='light'] :is(.board__head .icon, .cat-card:not(.is-on) .cat-card__icon, .cat-tag .icon) {
+  color: color-mix(in srgb, var(--cat) 64%, #171c32);
+}
+
+:root[data-theme='light'] .cell__won {
+  color: color-mix(in srgb, var(--won) var(--accent-text-mix), #171c32);
+}
+
+:root[data-theme='light'] .play-card--online .play-card__cta {
+  color: var(--cyan-ink);
+}
+
+:root[data-theme='light'] .play-card--online .play-card__icon {
+  color: var(--on-bright);
+}
+
+:root[data-theme='light'] .q-media,
+:root[data-theme='light'] .q-sequence__item,
+:root[data-theme='light'] .q-clues__item {
+  border: 1px solid var(--line);
+}
