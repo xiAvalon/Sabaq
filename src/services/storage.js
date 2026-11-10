@@ -36,12 +36,13 @@ export const DEFAULT_SETTINGS = {
   questionTime: 'auto',
   showExplanations: true,
   reduceMotion: false,
+  difficulty: 'mixed',
 };
 
 export const loadSettings = () => readObj('settings', DEFAULT_SETTINGS);
 export const saveSettings = (s) => write('settings', s);
 
-export const DEFAULT_PROFILE = { name: 'لاعب', color: 0 };
+export const DEFAULT_PROFILE = { name: 'لاعب', color: 0, avatar: null };
 export const loadProfile = () => readObj('profile', DEFAULT_PROFILE);
 export const saveProfile = (p) => write('profile', p);
 
@@ -58,6 +59,10 @@ export const EMPTY_STATS = {
   steals: 0,
   riskWins: 0,
   wins: 0,
+  winStreak: 0,
+  bestWinStreak: 0,
+  fastCorrect: 0,
+  categoryCorrect: {},
   categories: [],
   modes: [],
 };

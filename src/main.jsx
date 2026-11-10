@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
+import './styles/fonts.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/ui.css';
 import './styles/layout.css';
 import './styles/screens.css';
 import './styles/game.css';
+import './styles/feedback.css';
+import './styles/extras.css';
+import './styles/theme-light.css';
 
 document.documentElement.lang = 'ar';
 document.documentElement.dir = 'rtl';

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, Outlet, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { ToastProvider } from './components/feedback.jsx';
 import TopBar from './components/TopBar.jsx';
 import { GameProvider } from './context/GameContext.jsx';
 import { SettingsProvider } from './context/SettingsContext.jsx';
@@ -53,43 +54,45 @@ function LegacySetupRedirect() {
 export default function App() {
   return (
     <SettingsProvider>
-      <GameProvider>
-        <Router {...routerProps} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <ScrollToTop />
-          <div className="app">
-            <Routes>
-              <Route element={<WithTopBar />}>
-                <Route path="/" element={<HomeScreen />} />
-                <Route path="/offline" element={<OfflineModesScreen />} />
-                <Route path="/offline/:modeId" element={<SetupScreen />} />
-                <Route
-                  path="/online"
-                  element={
-                    <Suspense fallback={loading}>
-                      <OnlineScreen />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="/room/:code"
-                  element={
-                    <Suspense fallback={loading}>
-                      <RoomScreen />
-                    </Suspense>
-                  }
-                />
-                <Route path="/results" element={<ResultsScreen />} />
-                <Route path="/stats" element={<StatsScreen />} />
-                <Route path="/settings" element={<SettingsScreen />} />
-                <Route path="/how-to-play" element={<HowToPlayScreen />} />
-              </Route>
-              <Route path="/play" element={<GameScreen />} />
-              <Route path="/setup/:modeId" element={<LegacySetupRedirect />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </Router>
-      </GameProvider>
+      <ToastProvider>
+        <GameProvider>
+          <Router {...routerProps} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <ScrollToTop />
+            <div className="app">
+              <Routes>
+                <Route element={<WithTopBar />}>
+                  <Route path="/" element={<HomeScreen />} />
+                  <Route path="/offline" element={<OfflineModesScreen />} />
+                  <Route path="/offline/:modeId" element={<SetupScreen />} />
+                  <Route
+                    path="/online"
+                    element={
+                      <Suspense fallback={loading}>
+                        <OnlineScreen />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/room/:code"
+                    element={
+                      <Suspense fallback={loading}>
+                        <RoomScreen />
+                      </Suspense>
+                    }
+                  />
+                  <Route path="/results" element={<ResultsScreen />} />
+                  <Route path="/stats" element={<StatsScreen />} />
+                  <Route path="/settings" element={<SettingsScreen />} />
+                  <Route path="/how-to-play" element={<HowToPlayScreen />} />
+                </Route>
+                <Route path="/play" element={<GameScreen />} />
+                <Route path="/setup/:modeId" element={<LegacySetupRedirect />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
+          </Router>
+        </GameProvider>
+      </ToastProvider>
     </SettingsProvider>
   );
 }
