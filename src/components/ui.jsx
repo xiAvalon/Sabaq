@@ -79,7 +79,10 @@ export function CategoryTag({ id, size = 'md' }) {
   );
 }
 
-export function Avatar({ name, color, size = 36 }) {
+export const AVATAR_ICONS = ['star', 'bolt', 'flame', 'crown', 'compass', 'trophy', 'book', 'space'];
+
+/** Player avatar: their initial, or a chosen icon, on their colour. */
+export function Avatar({ name, color, icon = null, size = 36 }) {
   const c = typeof color === 'number' ? PLAYER_COLORS[color % PLAYER_COLORS.length] : color;
   const clean = (name ?? '').trim();
   // "اللاعب 2" / "الفريق 3" read better as their number than as «ا».
@@ -87,7 +90,7 @@ export function Avatar({ name, color, size = 36 }) {
   const initial = numbered ? numbered[1] : clean.charAt(0) || '؟';
   return (
     <span className="avatar" style={{ '--avatar': c, width: size, height: size, fontSize: size * 0.45 }} aria-hidden="true">
-      {initial}
+      {icon ? <Icon name={icon} size={Math.round(size * 0.55)} /> : initial}
     </span>
   );
 }

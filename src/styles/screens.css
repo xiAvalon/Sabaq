@@ -20,8 +20,8 @@
 }
 
 .hero__title {
-  font-size: var(--step-4);
-  line-height: 1.25;
+  font-size: var(--fs-display);
+  line-height: var(--lh-heading);
 }
 
 .hero__title mark {
@@ -35,7 +35,7 @@
 
 .hero__lede {
   color: var(--ink-2);
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
   max-width: 46ch;
 }
 
@@ -53,12 +53,12 @@
 
 .dial__track {
   fill: none;
-  stroke: rgba(245, 246, 250, 0.08);
+  stroke: var(--overlay-2);
   stroke-width: 10;
 }
 
 .dial__ticks line {
-  stroke: rgba(245, 246, 250, 0.22);
+  stroke: var(--overlay-3);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -80,18 +80,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  line-height: 1;
+  line-height: var(--lh-ui);
 }
 
 .dial__num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(4rem, 13vw, 5.6rem);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num-xl);
+  line-height: var(--lh-num);
 }
 
 .dial__unit {
   color: var(--ink-2);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   margin-top: 4px;
 }
 
@@ -122,7 +122,10 @@
   text-align: start;
   overflow: hidden;
   isolation: isolate;
-  transition: transform var(--dur) var(--ease), border-color var(--dur), box-shadow var(--dur);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur),
+    box-shadow var(--dur);
 }
 
 .play-card::after {
@@ -159,25 +162,23 @@
   height: 56px;
   border-radius: 18px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .play-card--online .play-card__icon {
-  color: var(--navy-deep);
+  color: var(--on-bright);
 }
 
 .play-card__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
-  line-height: 1.2;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-page);
+  line-height: var(--lh-heading);
 }
 
 .play-card__en {
   color: var(--ink-3);
-  font-size: var(--step--1);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
 }
 
 .play-card__desc {
@@ -190,12 +191,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
   color: var(--accent);
 }
 
 .play-card--offline .play-card__cta {
-  color: #a49dff;
+  color: var(--indigo-ink);
 }
 
 .home__secondary {
@@ -211,7 +212,7 @@
   padding: 14px 16px;
   border-radius: var(--r-md);
   border: 1px solid var(--line);
-  background: rgba(32, 39, 69, 0.6);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
   text-decoration: none;
   text-align: start;
   min-width: 0;
@@ -230,7 +231,7 @@
   flex: none;
   border-radius: 12px;
   background: var(--surface-2);
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .mini-link__text {
@@ -240,12 +241,12 @@
 }
 
 .mini-link__title {
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
 .mini-link__meta {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -268,7 +269,10 @@
   background: var(--surface);
   text-decoration: none;
   text-align: start;
-  transition: transform var(--dur) var(--ease), border-color var(--dur), box-shadow var(--dur);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur),
+    box-shadow var(--dur);
   min-width: 0;
 }
 
@@ -284,7 +288,7 @@
 }
 
 .mode-card.is-signature {
-  border-color: rgba(255, 200, 87, 0.35);
+  border-color: color-mix(in srgb, var(--gold) 45%, transparent);
 }
 
 .mode-card__top {
@@ -301,7 +305,7 @@
   height: 50px;
   border-radius: 16px;
   background: var(--surface-2);
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .mode-card.is-signature .mode-card__icon {
@@ -310,9 +314,8 @@
 }
 
 .mode-card__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-2);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-section);
   line-height: 1.3;
 }
 
@@ -327,7 +330,7 @@
   display: grid;
   gap: 4px;
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .mode-card__how li::before {
@@ -349,7 +352,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .mode-card__players {
@@ -370,15 +373,15 @@
   gap: 4px;
   padding: 2px 9px;
   border-radius: var(--r-pill);
-  background: rgba(245, 246, 250, 0.05);
+  background: var(--overlay-1);
   color: var(--ink-3);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-semibold);
 }
 
 .avail__item.is-on {
-  background: rgba(61, 220, 151, 0.12);
-  color: var(--good);
+  background: var(--tint-good);
+  color: var(--good-ink);
 }
 
 /* ---------- setup wizard ---------- */
@@ -407,7 +410,7 @@
   border: 1px solid var(--line);
   background: transparent;
   color: var(--ink-3);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   text-align: start;
 }
 
@@ -419,7 +422,7 @@
   flex: none;
   border-radius: 50%;
   background: var(--surface-2);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .steps__item.is-current button {
@@ -430,12 +433,12 @@
 
 .steps__item.is-current .steps__num {
   background: var(--indigo);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .steps__item.is-done .steps__num {
   background: var(--good);
-  color: var(--navy-deep);
+  color: var(--on-bright);
 }
 
 .wizard__footer {
@@ -453,7 +456,7 @@
 
 .wizard__summary {
   color: var(--ink-2);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
   min-width: 0;
 }
 
@@ -491,9 +494,9 @@
   padding: 10px 14px;
   list-style: none;
   border-radius: var(--r-md);
-  background: rgba(255, 92, 122, 0.12);
+  background: var(--tint-bad);
   color: var(--ink);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 /* ---------- category picker ---------- */
@@ -516,15 +519,14 @@
 }
 
 .picker__count strong {
-  font-family: var(--font-display);
-  font-size: var(--step-2);
+  font-size: var(--fs-section);
   color: var(--ink);
   margin-inline-end: 2px;
 }
 
 .picker__count span {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .picker__actions {
@@ -565,7 +567,11 @@
   border: 1.5px solid var(--line);
   background: var(--surface);
   text-align: start;
-  transition: transform var(--dur) var(--ease), border-color var(--dur), background var(--dur), box-shadow var(--dur);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur),
+    background var(--dur),
+    box-shadow var(--dur);
 }
 
 .cat-card:hover:not([aria-disabled='true']) {
@@ -583,7 +589,10 @@
   border-radius: 16px;
   background: color-mix(in srgb, var(--cat) 16%, var(--navy-deep));
   color: var(--cat);
-  transition: background var(--dur), color var(--dur), transform var(--dur) var(--ease-pop);
+  transition:
+    background var(--dur),
+    color var(--dur),
+    transform var(--dur) var(--ease-pop);
 }
 
 .cat-card__check {
@@ -596,21 +605,24 @@
   border-radius: 50%;
   border: 1.5px solid var(--line-strong);
   color: transparent;
-  transition: background var(--dur), border-color var(--dur), color var(--dur), transform var(--dur) var(--ease-pop);
+  transition:
+    background var(--dur),
+    border-color var(--dur),
+    color var(--dur),
+    transform var(--dur) var(--ease-pop);
 }
 
 .cat-card__name {
   grid-area: name;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-1);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-card);
   line-height: 1.35;
 }
 
 .cat-card__meta {
   grid-area: meta;
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .cat-card__diff {
@@ -647,14 +659,14 @@
 
 .cat-card.is-on .cat-card__icon {
   background: var(--cat);
-  color: var(--navy-deep);
+  color: var(--on-bright);
   transform: scale(1.04) rotate(-4deg);
 }
 
 .cat-card.is-on .cat-card__check {
   background: var(--cat);
   border-color: var(--cat);
-  color: var(--navy-deep);
+  color: var(--on-bright);
   transform: scale(1.08);
 }
 
@@ -664,7 +676,7 @@
 
 .picker__note {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 /* ---------- results ---------- */
@@ -695,13 +707,13 @@
 }
 
 .results__headline {
-  font-size: var(--step-4);
+  font-size: var(--fs-display);
   color: var(--player, var(--ink));
 }
 
 .results__sub {
   color: var(--ink-2);
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
 }
 
 .standings {
@@ -732,31 +744,30 @@
 }
 
 .standing__rank {
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
   color: var(--ink-3);
   width: 1.4em;
   text-align: center;
 }
 
 .standing.is-winner .standing__rank {
-  color: var(--gold);
+  color: var(--gold-ink);
 }
 
 .standing__name {
   flex: 1;
   min-width: 0;
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .standing__score {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
   color: var(--player);
+  line-height: var(--lh-num);
 }
 
 .statgrid {
@@ -774,13 +785,13 @@
 
 .statgrid dt {
   color: var(--ink-3);
-  font-size: 0.75rem;
+  font-size: var(--fs-meta);
 }
 
 .statgrid dd {
   margin: 0;
-  font-weight: 700;
-  font-size: var(--step-1);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-card);
 }
 
 .results__actions {
@@ -832,8 +843,8 @@
 
 .mini-board__rank {
   width: 1.5em;
-  color: var(--gold);
-  font-weight: 700;
+  color: var(--gold-ink);
+  font-weight: var(--fw-semibold);
 }
 
 .mini-board__name {
@@ -845,7 +856,7 @@
 }
 
 .mini-board__score {
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .review {
@@ -880,27 +891,27 @@
 }
 
 .review__who {
-  font-size: var(--step--1);
-  font-weight: 600;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
 }
 
 .review__pts {
   margin-inline-start: auto;
-  font-weight: 700;
-  color: var(--good);
+  font-weight: var(--fw-semibold);
+  color: var(--good-ink);
 }
 
 .review__pts.is-neg {
-  color: var(--bad);
+  color: var(--bad-ink);
 }
 
 .review__q {
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 
 .review__a {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .review__a strong {
@@ -924,19 +935,18 @@
 
 .tile dt {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .tile dd {
   margin: 4px 0 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
-  line-height: 1.1;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  line-height: var(--lh-num);
 }
 
 .tile--gold dd {
-  color: var(--gold);
+  color: var(--gold-ink);
 }
 
 .achievements {
@@ -979,12 +989,12 @@
 }
 
 .achievement__title {
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .achievement__desc {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .table-wrap {
@@ -1006,16 +1016,16 @@
 
 .leaderboard th {
   color: var(--ink-3);
-  font-weight: 500;
-  font-size: var(--step--1);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-label);
 }
 
 .leaderboard__score {
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .leaderboard tbody tr:first-child .leaderboard__score {
-  color: var(--gold);
+  color: var(--gold-ink);
 }
 
 /* ---------- how to play ---------- */
@@ -1038,11 +1048,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
 }
 
 .howto__mode h3 .icon {
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .howto__mode ul,
@@ -1056,7 +1066,7 @@
 
 .howto__mode ul {
   color: var(--ink-2);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .deflist {
@@ -1075,8 +1085,8 @@
 }
 
 .deflist dt {
-  font-weight: 700;
-  color: var(--cyan);
+  font-weight: var(--fw-semibold);
+  color: var(--cyan-ink);
 }
 
 .deflist dd {
@@ -1196,7 +1206,7 @@
 }
 
 .online .card__head .icon {
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .online > .notice {
@@ -1204,8 +1214,7 @@
 }
 
 .code-input {
-  font-family: var(--font-display);
-  font-size: 1.6rem !important;
+  font-size: var(--fs-num) !important;
   letter-spacing: 0.35em;
   text-align: center;
   text-transform: uppercase;
@@ -1257,10 +1266,9 @@
   height: 58px;
   border-radius: 14px;
   background: var(--navy-deep);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.9rem;
-  color: var(--cyan);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  color: var(--cyan-ink);
 }
 
 .invite__actions {
@@ -1288,7 +1296,7 @@
   max-width: 100%;
   overflow-wrap: anywhere;
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .roster {
@@ -1336,7 +1344,7 @@
 .roster__name {
   flex: 1;
   min-width: 0;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1344,14 +1352,13 @@
 
 .roster__me {
   color: var(--ink-3);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .roster__score {
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--player);
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
 }
 
 .online-modes {
@@ -1374,7 +1381,7 @@
 }
 
 .online-mode .icon {
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .online-mode.is-selected {
@@ -1383,12 +1390,12 @@
 }
 
 .online-mode__name {
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .online-mode__desc {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .settings-summary {
@@ -1469,11 +1476,10 @@
 }
 
 .countdown__num--inline {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(4rem, 18vw, 7rem);
-  line-height: 1;
-  color: var(--cyan);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num-xl);
+  line-height: var(--lh-num);
+  color: var(--cyan-ink);
   animation: count-pop 1s var(--ease) both;
 }
 
@@ -1492,6 +1498,6 @@
   .invite__code span {
     width: 40px;
     height: 52px;
-    font-size: 1.6rem;
+    font-size: var(--fs-num-sm);
   }
 }

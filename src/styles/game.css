@@ -28,19 +28,18 @@
 }
 
 .hud__title strong {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
 }
 
 .hud__stage {
-  font-size: var(--step--1);
-  color: var(--cyan);
-  font-weight: 600;
+  font-size: var(--fs-label);
+  color: var(--cyan-ink);
+  font-weight: var(--fw-semibold);
 }
 
 .hud__progress-text {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .hud__progress {
@@ -71,7 +70,9 @@
   border-radius: 10px;
   background: var(--cyan);
   transform-origin: right;
-  transition: transform 100ms linear, background 300ms;
+  transition:
+    transform 100ms linear,
+    background 300ms;
 }
 
 .clockbar.is-warn .clockbar__fill {
@@ -100,7 +101,9 @@
   border-radius: var(--r-pill);
   background: var(--surface);
   border: 1.5px solid var(--line);
-  transition: border-color var(--dur), box-shadow var(--dur);
+  transition:
+    border-color var(--dur),
+    box-shadow var(--dur);
 }
 
 .score-chip.is-active {
@@ -113,13 +116,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 600;
-  font-size: var(--step--1);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-label);
 }
 
 .score-chip__score {
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--player);
   animation: score-pop 400ms var(--ease-pop);
 }
@@ -132,8 +134,8 @@
   border-radius: var(--r-pill);
   background: var(--gold);
   color: var(--on-gold);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-semibold);
 }
 
 @keyframes score-pop {
@@ -162,7 +164,7 @@
 
 .timer__track {
   fill: var(--navy-deep);
-  stroke: rgba(245, 246, 250, 0.08);
+  stroke: var(--overlay-2);
   stroke-width: 6;
 }
 
@@ -171,7 +173,9 @@
   stroke: var(--cyan);
   stroke-width: 6;
   stroke-linecap: round;
-  transition: stroke-dashoffset 120ms linear, stroke 300ms;
+  transition:
+    stroke-dashoffset 120ms linear,
+    stroke 300ms;
 }
 
 .timer__num {
@@ -179,14 +183,13 @@
   inset: 0;
   display: grid;
   place-items: center;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.9rem;
-  line-height: 1;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  line-height: var(--lh-num);
 }
 
 .timer--lg .timer__num {
-  font-size: 3rem;
+  font-size: var(--fs-num-lg);
 }
 
 .timer.is-warn .timer__bar {
@@ -198,7 +201,7 @@
 }
 
 .timer.is-urgent .timer__num {
-  color: var(--bad);
+  color: var(--bad-ink);
   animation: heartbeat 1s ease-in-out infinite;
 }
 
@@ -211,6 +214,7 @@
   100% {
     transform: scale(1);
   }
+
   15% {
     transform: scale(1.2);
   }
@@ -223,16 +227,16 @@
   z-index: 60;
   display: grid;
   place-items: center;
-  background: rgba(11, 16, 34, 0.86);
+  background: var(--scrim);
   backdrop-filter: blur(4px);
 }
 
 .countdown__num {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(5rem, 22vw, 10rem);
-  color: var(--cyan);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num-xl);
+  color: var(--cyan-ink);
   animation: count-pop 700ms var(--ease) both;
+  line-height: var(--lh-heading);
 }
 
 @keyframes count-pop {
@@ -240,10 +244,12 @@
     opacity: 0;
     transform: scale(1.6);
   }
+
   30% {
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     opacity: 0.2;
     transform: scale(0.85);
@@ -276,8 +282,8 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  color: var(--cyan);
-  font-weight: 600;
+  color: var(--cyan-ink);
+  font-weight: var(--fw-semibold);
 }
 
 .intro__avatar {
@@ -285,13 +291,13 @@
 }
 
 .intro__heading {
-  font-size: var(--step-4);
+  font-size: var(--fs-display);
   color: var(--player);
-  line-height: 1.15;
+  line-height: var(--lh-heading);
 }
 
 .decision__title {
-  font-size: var(--step-3);
+  font-size: var(--fs-page);
 }
 
 .intro__pass {
@@ -299,7 +305,7 @@
   align-items: center;
   gap: 6px;
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .intro__body {
@@ -329,9 +335,8 @@
 }
 
 .intro--steal .intro__eyebrow {
-  color: var(--bad);
-  font-family: var(--font-display);
-  font-size: var(--step-2);
+  color: var(--bad-ink);
+  font-size: var(--fs-section);
 }
 
 .golden-burst {
@@ -342,7 +347,7 @@
   border-radius: var(--r-pill);
   background: var(--gold);
   color: var(--on-gold);
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
   animation: pop-in 400ms var(--ease-pop);
 }
 
@@ -362,7 +367,9 @@
   border-radius: var(--r-lg);
   border: 1.5px solid var(--line);
   background: var(--navy-deep);
-  transition: transform var(--dur) var(--ease), border-color var(--dur);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur);
 }
 
 .decision__card:hover {
@@ -375,23 +382,23 @@
 }
 
 .decision__label {
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .decision__value {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
-  color: var(--good);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  color: var(--good-ink);
+  line-height: var(--lh-num);
 }
 
 .decision__card--risk .decision__value {
-  color: var(--bad);
+  color: var(--bad-ink);
 }
 
 .decision__hint {
   color: var(--ink-3);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .wager__score {
@@ -399,11 +406,10 @@
 }
 
 .wager__amount {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-4);
-  color: var(--gold);
-  line-height: 1;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num-lg);
+  color: var(--gold-ink);
+  line-height: var(--lh-num);
 }
 
 .wager__quick {
@@ -429,7 +435,7 @@
 }
 
 .board-caption h2 {
-  font-size: var(--step-3);
+  font-size: var(--fs-section);
 }
 
 .board-caption p {
@@ -467,8 +473,8 @@
 }
 
 .board__name {
-  font-weight: 700;
-  font-size: var(--step--1);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-label);
   line-height: 1.3;
 }
 
@@ -479,11 +485,13 @@
   border-radius: var(--r-md);
   border: 1.5px solid var(--line);
   background: var(--surface);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
-  color: var(--gold);
-  transition: transform var(--dur) var(--ease), border-color var(--dur), background var(--dur);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  color: var(--gold-ink);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur),
+    background var(--dur);
 }
 
 .cell:hover:not(:disabled) {
@@ -509,14 +517,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--font-body);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
   color: var(--won);
 }
 
 .cell__miss {
   color: var(--ink-3);
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
 }
 
 /* ---------- question ---------- */
@@ -547,7 +554,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
 .qstage__tags {
@@ -562,35 +569,35 @@
 .qvalue {
   padding: 2px 10px;
   border-radius: var(--r-pill);
-  background: rgba(245, 246, 250, 0.05);
+  background: var(--overlay-1);
   color: var(--ink-2);
-  font-size: var(--step--1);
-  font-weight: 500;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
 }
 
 .diff--1 {
-  color: var(--good);
+  color: var(--good-ink);
 }
 
 .diff--2 {
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .diff--3 {
-  color: var(--bad);
+  color: var(--bad-ink);
 }
 
 .qvalue {
-  background: rgba(255, 200, 87, 0.14);
-  color: var(--gold);
-  font-weight: 700;
+  background: var(--tint-gold);
+  color: var(--gold-ink);
+  font-weight: var(--fw-semibold);
 }
 
 .badge {
   padding: 2px 10px;
   border-radius: var(--r-pill);
-  font-size: var(--step--1);
-  font-weight: 700;
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
 }
 
 .badge--gold {
@@ -600,7 +607,7 @@
 
 .badge--flare {
   background: var(--bad);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .qcard {
@@ -626,15 +633,15 @@
 
 .q-prompt {
   max-width: 34ch;
-  font-size: var(--step-2);
-  font-weight: 600;
-  line-height: 1.6;
+  font-size: var(--fs-section);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-body);
 }
 
 .q-prompt--sm {
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
   color: var(--ink-2);
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 
 .q-blank {
@@ -642,7 +649,7 @@
   min-width: 3.5em;
   margin: 0 6px;
   border-bottom: 3px solid var(--gold);
-  color: var(--gold);
+  color: var(--gold-ink);
   line-height: 1.2;
 }
 
@@ -681,13 +688,13 @@
   padding: 8px 16px;
   border-radius: var(--r-sm);
   background: var(--navy-deep);
-  font-weight: 700;
-  font-size: var(--step-1);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-card);
 }
 
 .q-sequence__item--next {
   outline: 2px dashed var(--gold);
-  color: var(--gold);
+  color: var(--gold-ink);
 }
 
 .q-clues {
@@ -708,15 +715,15 @@
   border-radius: var(--r-sm);
   background: var(--navy-deep);
   text-align: start;
-  font-size: var(--step-1);
+  font-size: var(--fs-card);
   animation: card-in 300ms var(--ease);
 }
 
 .q-clues__num {
   flex: none;
-  color: var(--cyan);
-  font-size: var(--step--1);
-  font-weight: 700;
+  color: var(--cyan-ink);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
 }
 
 /* ---------- answers ---------- */
@@ -737,9 +744,13 @@
   border: 1.5px solid var(--line);
   background: var(--surface);
   text-align: start;
-  font-weight: 500;
-  font-size: var(--step-1);
-  transition: transform var(--dur) var(--ease), border-color var(--dur), background var(--dur), opacity var(--dur);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-card);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur),
+    background var(--dur),
+    opacity var(--dur);
 }
 
 .choice:hover:not(:disabled) {
@@ -756,9 +767,9 @@
   flex: none;
   border-radius: 11px;
   background: var(--navy-deep);
-  color: var(--cyan);
-  font-weight: 700;
-  font-size: var(--step-0);
+  color: var(--cyan-ink);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-body);
 }
 
 .choice__text {
@@ -783,7 +794,7 @@
 
 .choice.is-correct .choice__letter {
   background: var(--good);
-  color: var(--navy-deep);
+  color: var(--on-bright);
 }
 
 .choice.is-wrong {
@@ -794,15 +805,14 @@
 
 .choice.is-wrong .choice__letter {
   background: var(--bad);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .choices--bool .choice {
   justify-content: center;
   min-height: 76px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-section);
 }
 
 @keyframes correct-pop {
@@ -816,6 +826,7 @@
   60% {
     transform: translateX(-6px);
   }
+
   40%,
   80% {
     transform: translateX(6px);
@@ -830,8 +841,8 @@
 .typed__input {
   flex: 1;
   min-height: 58px !important;
-  font-size: var(--step-1) !important;
-  font-weight: 500;
+  font-size: var(--fs-card) !important;
+  font-weight: var(--fw-medium);
 }
 
 .typed__input[dir='ltr'] {
@@ -864,8 +875,11 @@
   border-radius: var(--r-md);
   border: 1.5px dashed var(--line-strong);
   background: transparent;
-  font-weight: 700;
-  transition: border-color var(--dur), background var(--dur), transform var(--dur) var(--ease);
+  font-weight: var(--fw-semibold);
+  transition:
+    border-color var(--dur),
+    background var(--dur),
+    transform var(--dur) var(--ease);
 }
 
 .powerup:hover:not(:disabled) {
@@ -894,11 +908,11 @@
   padding: 0 6px;
   border-radius: var(--r-pill);
   background: var(--surface-2);
-  font-size: 0.75rem;
+  font-size: var(--fs-meta);
 }
 
 .powerup.is-active .powerup__count {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(23, 28, 50, 0.14);
 }
 
 /* ---------- feedback ---------- */
@@ -932,33 +946,32 @@
 }
 
 .feedback__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-section);
 }
 
 .feedback--good .feedback__title {
-  color: var(--good);
+  color: var(--good-ink);
 }
 
 .feedback--bad .feedback__title {
-  color: var(--bad);
+  color: var(--bad-ink);
 }
 
 .feedback--info .feedback__title {
-  color: var(--cyan);
+  color: var(--cyan-ink);
 }
 
 .feedback__points {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-3);
-  color: var(--gold);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num);
+  color: var(--gold-ink);
   animation: score-pop 480ms var(--ease-pop);
+  line-height: var(--lh-num);
 }
 
 .feedback__points.is-neg {
-  color: var(--bad);
+  color: var(--bad-ink);
 }
 
 .feedback__chips {
@@ -969,13 +982,13 @@
 }
 
 .feedback__text strong {
-  color: var(--gold);
+  color: var(--gold-ink);
 }
 
 .feedback__explain {
   max-width: 56ch;
   color: var(--ink-2);
-  font-size: var(--step--1);
+  font-size: var(--fs-label);
 }
 
 .round-summary {
@@ -994,14 +1007,13 @@
 
 .round-summary dt {
   color: var(--ink-3);
-  font-size: 0.75rem;
+  font-size: var(--fs-meta);
 }
 
 .round-summary dd {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--step-2);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-num-sm);
 }
 
 /* ---------- small screens ---------- */
@@ -1025,7 +1037,7 @@
 
   .cell {
     min-height: 58px;
-    font-size: var(--step-2);
+    font-size: var(--fs-num-sm);
   }
 }
 
@@ -1040,7 +1052,7 @@
 
   .choice {
     min-height: 54px;
-    font-size: var(--step-0);
+    font-size: var(--fs-body);
   }
 
   .qcard {
@@ -1048,7 +1060,8 @@
   }
 
   .q-prompt {
-    font-size: var(--step-1);
+    font-size: var(--fs-card);
+    line-height: 1.7;
   }
 
   .timer:not(.timer--lg) {
@@ -1057,7 +1070,7 @@
   }
 
   .timer:not(.timer--lg) .timer__num {
-    font-size: 1.5rem;
+    font-size: var(--fs-num-sm);
   }
 
   .timer--lg {
@@ -1066,7 +1079,7 @@
   }
 
   .timer--lg .timer__num {
-    font-size: 2.4rem;
+    font-size: var(--fs-num);
   }
 
   .powerups {

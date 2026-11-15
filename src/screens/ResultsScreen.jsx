@@ -172,7 +172,7 @@ export default function ResultsScreen() {
                 <li key={i} className={`review__item${h.correct ? '' : ' is-wrong'}`}>
                   <div className="review__top">
                     <CategoryTag id={h.category} size="sm" />
-                    <span className="review__who" style={{ color: game.players[h.playerIdx].color }}>
+                    <span className="review__who player-name" style={{ '--player': game.players[h.playerIdx].color }}>
                       {game.players[h.playerIdx].name}
                       {h.steal ? ' (سرقة)' : ''}
                     </span>

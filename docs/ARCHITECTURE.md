@@ -52,3 +52,22 @@ single long form, category picker is a plain grid.
   the compact format in `compact.js`).
 - **Offline:** build-time service worker (`vite.config.js`), manifest and icons in `public/`.
 - **Online:** see `docs/ONLINE.md`.
+
+## UI polish (v1.1)
+
+- **Typography:** one family, `IBM Plex Sans Arabic`, self-hosted in `src/assets/fonts`
+  (`fonts.css`, Arabic and Latin subsets via `unicode-range`, `font-display: swap`). All sizes,
+  weights (400/500/600/700 only) and line heights come from tokens in `tokens.css`
+  (`--fs-*`, `--fw-*`, `--lh-*`). No letter-spacing on Arabic; digits use tabular figures.
+- **Themes:** `<html data-theme="dark|light">`. Both themes define the same token names in
+  `tokens.css`; accents have `-ink` variants for text. `theme-light.css` darkens bright
+  player/category colours used as text. An inline script in `index.html` sets the attribute from
+  `localStorage['sabaq:theme']` before first paint; `services/theme.js` applies and saves changes.
+- **Feedback:** `components/feedback.jsx` (toasts via `useToast()`, `SoonBadge`, `Skeleton`,
+  `PreviewNote`) and `data-tip` tooltips in `feedback.css`.
+- **New routes:** `/login`, `/signup` (UI only: `services/authValidation.js`, no network, no
+  storage), `/profile` (guest profile; `engine/progression.js` derives level and rank from saved
+  stats), `/community` (labelled previews; the invite action is real).
+- **Achievements:** each has a `target` and `progress(ctx)`; stats now also track per-category
+  correct answers, fast answers and win streaks.
+

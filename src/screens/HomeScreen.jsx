@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { SoonBadge } from '../components/feedback.jsx';
 import { Icon } from '../components/icons.jsx';
+import { CategoryTag } from '../components/ui.jsx';
 import { useGame } from '../context/GameContext.jsx';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { CATEGORIES, CATEGORY_IDS } from '../data/categories.js';
@@ -47,13 +49,13 @@ export default function HomeScreen() {
   const [unlocked] = useState(loadAchievements);
   const resumable = game && game.phase !== 'finished';
 
-  const quickRush = () => {
+  const rush = (categories, difficulty) => {
     if (!bank) return;
     sound.unlock();
     const config = {
       players: [profile.name],
-      categories: CATEGORY_IDS,
-      difficulty: 'mixed',
+      categories,
+      difficulty,
       questionTime: 'auto',
       rounds: 1,
       clockSeconds: 30,
@@ -61,6 +63,7 @@ export default function HomeScreen() {
     };
     if (startGame('clock', config)) navigate('/play');
   };
+  const quickRush = () => rush(CATEGORY_IDS, 'mixed');
 
   return (
     <div className="home screen">
@@ -119,6 +122,37 @@ export default function HomeScreen() {
         )}
       </section>
 
+      <section className="daily card" aria-labelledby="daily-title">
+        <div className="daily__main">
+          <div className="daily__head">
+            <span className="daily__icon">
+              <Icon name="calendar" size={22} />
+            </span>
+            <div>
+              <p className="eyebrow">التحدي اليومي · نموذج</p>
+              <h2 id="daily-title" className="daily__title">
+                جولة الجغرافيا السريعة
+              </h2>
+            </div>
+          </div>
+          <ul className="daily__meta" aria-label="تفاصيل التحدي">
+            <li>
+              <CategoryTag id="geography" size="sm" />
+            </li>
+            <li className="pill">متوسط</li>
+            <li className="pill">
+              <Icon name="timer" size={14} /> 30 ثانية
+            </li>
+          </ul>
+          <p className="daily__note">
+            <Icon name="gift" size={16} /> مكافآت التحدي وتجدده كل يوم <SoonBadge />
+          </p>
+        </div>
+        <button type="button" className="btn btn--gold btn--lg daily__cta" onClick={() => rush(['geography'], 2)} disabled={!bank}>
+          <Icon name="play" size={18} /> ابدأ التحدي
+        </button>
+      </section>
+
       <nav className="home__secondary" aria-label="المزيد">
         <button type="button" className="mini-link" onClick={quickRush} disabled={!bank}>
           <span className="mini-link__icon">
@@ -134,10 +168,19 @@ export default function HomeScreen() {
             <Icon name="trophy" />
           </span>
           <span className="mini-link__text">
-            <span className="mini-link__title">الإحصائيات والإنجازات</span>
+            <span className="mini-link__title">الإحصائيات</span>
             <span className="mini-link__meta">
               {unlocked.length}/{ACHIEVEMENTS.length} إنجاز · {stats.games} مباراة
             </span>
+          </span>
+        </Link>
+        <Link to="/community" className="mini-link">
+          <span className="mini-link__icon">
+            <Icon name="users" />
+          </span>
+          <span className="mini-link__text">
+            <span className="mini-link__title">المجتمع</span>
+            <span className="mini-link__meta">الأصدقاء والصدارة</span>
           </span>
         </Link>
         <Link to="/how-to-play" className="mini-link">
@@ -155,7 +198,7 @@ export default function HomeScreen() {
           </span>
           <span className="mini-link__text">
             <span className="mini-link__title">الإعدادات</span>
-            <span className="mini-link__meta">الصوت والوقت</span>
+            <span className="mini-link__meta">المظهر والصوت</span>
           </span>
         </Link>
       </nav>

@@ -31,7 +31,7 @@ export function makeDraft(modeId, { settings = {}, last = {}, categoryIds }) {
     playerCount,
     names: fitNames(last.names ?? [], playerCount, playerMode),
     categories,
-    difficulty: last.difficulty ?? mode.defaults.difficulty ?? 'mixed',
+    difficulty: last.difficulty ?? settings.difficulty ?? mode.defaults.difficulty ?? 'mixed',
     questionTime: last.questionTime ?? settings.questionTime ?? 'auto',
     rounds: last.roundsByMode?.[modeId] ?? mode.defaults.rounds ?? 4,
     clockSeconds: last.clockSeconds ?? mode.defaults.clockSeconds ?? 60,

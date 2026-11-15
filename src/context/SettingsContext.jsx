@@ -1,12 +1,17 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { loadProfile, loadSettings, saveProfile, saveSettings } from '../services/storage.js';
 import { sound } from '../services/sound.js';
+import { applyTheme, readTheme } from '../services/theme.js';
 
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(loadSettings);
   const [profile, setProfile] = useState(loadProfile);
+  const [theme, setThemeState] = useState(readTheme);
+
+  const setTheme = useCallback((next) => setThemeState(applyTheme(next)), []);
+  const toggleTheme = useCallback(() => setThemeState((t) => applyTheme(t === 'dark' ? 'light' : 'dark')), []);
 
   useEffect(() => {
     sound.configure(settings);
@@ -29,7 +34,10 @@ export function SettingsProvider({ children }) {
     });
   }, []);
 
-  const value = useMemo(() => ({ settings, update, profile, updateProfile }), [settings, update, profile, updateProfile]);
+  const value = useMemo(
+    () => ({ settings, update, profile, updateProfile, theme, setTheme, toggleTheme }),
+    [settings, update, profile, updateProfile, theme, setTheme, toggleTheme],
+  );
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
 

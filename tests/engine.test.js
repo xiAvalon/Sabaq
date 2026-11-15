@@ -320,7 +320,8 @@ describe('categories', () => {
     walk('src');
     for (const f of files) {
       const text = fs.readFileSync(f, 'utf8');
-      for (const name of removed) expect(text.includes(name), `${name} in ${f}`).toBe(false);
+      // Whole category names only: «الموسيقى الخلفية» (the background-music setting) is not the removed category.
+      for (const name of removed) expect(new RegExp(`(^|[^\u0600-\u06FF])${name}`).test(text), `${name} in ${f}`).toBe(false);
       for (const id of removedIds) expect(new RegExp(`['"]${id}['"]`).test(text), `${id} in ${f}`).toBe(false);
     }
     expect(bank.every((q) => CATEGORY_IDS.includes(q.category))).toBe(true);
